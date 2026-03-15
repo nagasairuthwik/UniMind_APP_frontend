@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · Insights</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script src="auth.js"></script>
+  <script>
+    tailwind.config = { darkMode: "class", theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };
+  </script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); }</style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased" onload="unimindRequireAuthOnLoad('signin.html')">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <div class="flex items-center space-x-2">
+        <div class="bg-white p-1.5 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-primary text-xl font-bold">auto_awesome</span></div>
+        <a href="index.html" class="text-xl font-extrabold tracking-tight text-white">UniMind</a>
+      </div>
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a class="text-white/70 hover:text-white" href="dashboard.html">Dashboard</a>
+        <a class="text-white/70 hover:text-white" href="health.html">Health</a>
+        <a class="text-white/70 hover:text-white" href="finance.html">Finance</a>
+        <a class="text-white/70 hover:text-white" href="productivity.html">Productivity</a>
+        <a class="text-white/70 hover:text-white" href="lifestyle.html">Lifestyle</a>
+        <a class="text-white hover:text-primary" href="insights.html">Insights</a>
+        <a class="text-white/70 hover:text-white" href="analytics.html">Analytics</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a class="hidden sm:block text-sm font-semibold text-white/80 hover:text-white px-4 py-2" href="settings.html">Settings</a>
+        <a class="bg-white text-primary px-5 py-2.5 rounded-full text-sm font-bold" href="ai-chat.html">Open AI</a>
+      </div>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold">Insights</h1>
+        <p class="text-slate-300">Your AI-Generated Insights — personalized across goals, health, finance, and productivity.</p>
+      </div>
+      <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-6">
+        <h2 class="font-semibold text-white mb-1">AI Confidence Score</h2>
+        <p class="text-sm text-slate-400 mb-3">Based on data quality and consistency.</p>
+        <p class="text-4xl font-bold text-primary">92%</p>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">Insight Summary</h2>
+        <p class="text-sm text-slate-400 mb-4">Personalized insights across your goals, health, finance, and productivity.</p>
+        <ul class="space-y-2 text-slate-200">
+          <li class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span> You're on track with your savings goal this month</li>
+          <li class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span> Productivity streak: 5 days in a row</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">Strong Patterns Detected</h2>
+        <ul class="space-y-2 text-slate-200">
+          <li>You're most productive on Wednesday mornings</li>
+          <li>Exercise consistency improves sleep quality by 35%</li>
+          <li>Saving rate increases when tracking expenses daily</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">Predicted Outcomes</h2>
+        <p class="text-sm text-slate-400 mb-2">If you maintain current pace:</p>
+        <ul class="space-y-1 text-slate-200">
+          <li>• Reach emergency fund goal by Oct 2026</li>
+          <li>• Complete 180+ workouts this year</li>
+          <li>• Save ₹4,000+ by year end</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">Recommendations</h2>
+        <ul class="space-y-1 text-slate-200">
+          <li>• Schedule important tasks for 9–11 AM</li>
+          <li>• Add 2 more workout sessions per week</li>
+          <li>• Review budget weekly instead of monthly</li>
+        </ul>
+      </div>
+      <div class="flex flex-wrap gap-4 pt-4">
+        <a href="analytics.html" class="inline-flex items-center gap-2 text-primary hover:underline">View Analytics →</a>
+        <a href="weekly-progress-overview.html" class="inline-flex items-center gap-2 text-primary hover:underline">Weekly Progress Overview →</a>
+        <a href="progress-comparison.html" class="inline-flex items-center gap-2 text-primary hover:underline">Progress Comparison →</a>
+      </div>
+      <a href="dashboard.html" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white block mt-6">← Back to Dashboard</a>
+    </div>
+  </main>
+</body>
+</html>

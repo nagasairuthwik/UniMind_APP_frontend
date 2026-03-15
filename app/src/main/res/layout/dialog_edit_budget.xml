@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit monthly budget"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/signup_label" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Adjust how much you plan to spend in each category this month."
+        android:textSize="14sp"
+        android:textColor="@color/signup_subtitle" />
+
+    <EditText
+        android:id="@+id/edit_budget_food"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:inputType="numberDecimal"
+        android:hint="Food &amp; dining budget"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/edit_budget_transport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:inputType="numberDecimal"
+        android:hint="Transport budget"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/edit_budget_entertainment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:inputType="numberDecimal"
+        android:hint="Entertainment budget"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/edit_budget_bills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:inputType="numberDecimal"
+        android:hint="Bills &amp; utilities budget"
+        android:textSize="14sp" />
+
+</LinearLayout>
+

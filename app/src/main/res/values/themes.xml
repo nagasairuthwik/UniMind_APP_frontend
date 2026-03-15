@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Follows system dark/light (phone settings). Light defaults; values-night used when system dark. -->
+    <style name="Theme.UniMind" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/welcome_background</item>
+        <item name="android:editTextStyle">@style/UniMindEditText</item>
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+    </style>
+
+    <!-- Consistent font and size for all text inputs -->
+    <style name="UniMindEditText" parent="android:Widget.EditText">
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>

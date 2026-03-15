@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Main four-pointed star (sparkle) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,3L13.5,9.5L20,11L13.5,12.5L12,19L10.5,12.5L4,11L10.5,9.5L12,3Z" />
+    <!-- Small star bottom-left -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.7"
+        android:pathData="M6,16L6.8,18.2L9,19L6.8,19.8L6,22L5.2,19.8L3,19L5.2,18.2L6,16Z" />
+    <!-- Small star lower -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M10,20L10.4,21.2L11.6,21.6L10.4,22L10,23.2L9.6,22L8.4,21.6L9.6,21.2L10,20Z" />
+    <!-- Plus sign upper right -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,5h1v2h2v1h-2v2h-1V8h-2V7h2V5z" />
+</vector>

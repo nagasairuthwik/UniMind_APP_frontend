@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Coffee cup -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M20,3H4v10c0,2.21 1.79,4 4,4h6v2H8v2h8v-2h-2v-2h2c2.21,0 4,-1.79 4,-4V3zM18,11H6V5h12v6z" />
+</vector>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/comparison_metric_card_bg"
+    android:padding="14dp"
+    android:layout_marginTop="8dp"
+    android:elevation="2dp">
+
+    <TextView
+        android:id="@+id/lifestyle_item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/on_surface"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/lifestyle_item_sleep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/on_surface"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/lifestyle_item_stress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/on_surface"
+        android:textSize="13sp" />
+
+</LinearLayout>
+

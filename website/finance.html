@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · Finance</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script src="auth.js"></script>
+  <script>
+    tailwind.config = { darkMode: "class", theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };
+  </script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); }</style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased" onload="unimindRequireAuthOnLoad('signin.html')">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <div class="flex items-center space-x-2">
+        <div class="bg-white p-1.5 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-primary text-xl font-bold">auto_awesome</span></div>
+        <a href="index.html" class="text-xl font-extrabold tracking-tight text-white">UniMind</a>
+      </div>
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a class="text-white/70 hover:text-white" href="dashboard.html">Dashboard</a>
+        <a class="text-white/70 hover:text-white" href="health.html">Health</a>
+        <a class="text-white hover:text-primary" href="finance.html">Finance</a>
+        <a class="text-white/70 hover:text-white" href="productivity.html">Productivity</a>
+        <a class="text-white/70 hover:text-white" href="lifestyle.html">Lifestyle</a>
+        <a class="text-white/70 hover:text-white" href="insights.html">Insights</a>
+        <a class="text-white/70 hover:text-white" href="analytics.html">Analytics</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a class="hidden sm:block text-sm font-semibold text-white/80 hover:text-white px-4 py-2" href="settings.html">Settings</a>
+        <a class="bg-white text-primary px-5 py-2.5 rounded-full text-sm font-bold" href="ai-chat.html">Open AI</a>
+      </div>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-7xl mx-auto space-y-6">
+      <h1 class="text-2xl md:text-3xl font-bold">Finance</h1>
+      <p class="text-slate-300">Track income, expenses, and savings goals in one place.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-5">
+          <p class="text-xs text-slate-400 uppercase tracking-wide">Balance</p>
+          <p class="text-2xl font-bold text-white">₹0</p>
+        </div>
+        <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-5">
+          <p class="text-xs text-slate-400 uppercase tracking-wide">Monthly Income</p>
+          <p class="text-2xl font-bold text-emerald-400">₹0</p>
+        </div>
+        <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-5">
+          <p class="text-xs text-slate-400 uppercase tracking-wide">Total Expenses</p>
+          <p class="text-2xl font-bold text-amber-400">₹0</p>
+        </div>
+      </div>
+      <div class="rounded-2xl bg-emerald-500/10 border border-emerald-500/30 p-5">
+        <h3 class="font-semibold text-emerald-300">AI Financial Insight</h3>
+        <p class="text-slate-200 mt-1">Start logging your income and expenses to see personalized savings insights here.</p>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">Recent Transactions</h2>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/40 border border-purple-500/20">
+            <div><p class="font-medium text-white">Grocery Shopping</p><p class="text-xs text-slate-400">Food • Today</p></div>
+            <span class="text-amber-400 font-semibold">−₹85.50</span>
+          </div>
+          <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/40 border border-purple-500/20">
+            <div><p class="font-medium text-white">Salary Deposit</p><p class="text-xs text-slate-400">Income • Feb 1</p></div>
+            <span class="text-emerald-400 font-semibold">+₹5,000.00</span>
+          </div>
+        </div>
+        <a href="#" class="inline-block text-sm text-primary mt-2">View All</a>
+      </div>
+      <h2 class="font-semibold text-white">Financial Tools</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a href="add-expense.html" class="rounded-2xl bg-slate-800/80 border border-slate-700 p-5 hover:border-primary/50 transition flex items-center gap-3">
+          <span class="material-symbols-outlined text-amber-400 text-3xl">add_circle</span>
+          <div><h2 class="font-semibold">Add expense</h2><p class="text-sm text-slate-400">Log a new expense</p></div>
+        </a>
+        <a href="budget.html" class="rounded-2xl bg-slate-800/80 border border-slate-700 p-5 hover:border-primary/50 transition flex items-center gap-3">
+          <span class="material-symbols-outlined text-sky-400 text-3xl">account_balance_wallet</span>
+          <div><h2 class="font-semibold">Budget</h2><p class="text-sm text-slate-400">Plan monthly budget</p></div>
+        </a>
+        <a href="savings-goals.html" class="rounded-2xl bg-slate-800/80 border border-slate-700 p-5 hover:border-primary/50 transition flex items-center gap-3">
+          <span class="material-symbols-outlined text-emerald-400 text-3xl">savings</span>
+          <div><h2 class="font-semibold">Savings goals</h2><p class="text-sm text-slate-400">Targets & progress</p></div>
+        </a>
+        <a href="savings-overview.html" class="rounded-2xl bg-slate-800/80 border border-slate-700 p-5 hover:border-primary/50 transition flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-3xl">trending_up</span>
+          <div><h2 class="font-semibold">Savings overview</h2><p class="text-sm text-slate-400">Summary</p></div>
+        </a>
+        <a href="finance-analytics.html" class="rounded-2xl bg-slate-800/80 border border-slate-700 p-5 hover:border-primary/50 transition flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-3xl">analytics</span>
+          <div><h2 class="font-semibold">Finance analytics</h2><p class="text-sm text-slate-400">Trends</p></div>
+        </a>
+      </div>
+      <a href="dashboard.html" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white">← Back to Dashboard</a>
+    </div>
+  </main>
+</body>
+</html>

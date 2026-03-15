@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Four-pointed spark/star (center at 12,12) -->
+    <path
+        android:fillColor="@color/login_check_btn_text"
+        android:pathData="M12,2L14,9L22,12L14,15L12,22L10,15L2,12L10,9Z" />
+    <!-- Small plus on upper right -->
+    <path
+        android:fillColor="@color/login_check_btn_text"
+        android:pathData="M19,5h1v1h-1v1h-1V6h-1V5h1V4h1Z" />
+</vector>

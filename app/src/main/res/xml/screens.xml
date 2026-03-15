@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Index of all app screens and their layout XML files. One layout per screen. -->
+<screens xmlns:android="http://schemas.android.com/apk/res/android">
+    <screen name="Splash" activity="SplashActivity" layout="activity_splash" />
+    <screen name="Welcome" activity="WelcomeActivity" layout="activity_welcome" />
+    <screen name="LoginCheck" activity="LoginCheckActivity" layout="activity_login_check" />
+    <screen name="Signup" activity="SignupActivity" layout="activity_signup" />
+    <screen name="SignIn" activity="SignInActivity" layout="activity_signin" />
+    <screen name="ForgotPassword" activity="ForgotPasswordActivity" layout="activity_forgot_password" />
+    <screen name="ProfileSetup" activity="ProfileSetupActivity" layout="activity_profile_setup" />
+    <screen name="DomainSelection" activity="DomainSelectionActivity" layout="activity_domain_selection" />
+    <screen name="Goals" activity="GoalsActivity" layout="activity_goals" />
+    <screen name="AiPersonality" activity="AiPersonalityActivity" layout="activity_ai_personality" />
+    <screen name="Permissions" activity="PermissionsActivity" layout="activity_permissions" />
+    <screen name="ChatIntro" activity="ChatIntroActivity" layout="activity_chat_intro" />
+    <screen name="TrackProgress" activity="TrackProgressActivity" layout="activity_track_progress" />
+    <screen name="Suggestions" activity="SuggestionsActivity" layout="activity_suggestions" />
+    <screen name="AllSet" activity="AllSetActivity" layout="activity_all_set" />
+    <screen name="Main (Dashboard)" activity="MainActivity" layout="activity_main" />
+</screens>

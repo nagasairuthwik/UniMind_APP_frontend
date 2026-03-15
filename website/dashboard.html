@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · Dashboard</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#7c3aed",
+            "background-light": "#ffffff",
+            "background-dark": "#0f172a",
+          },
+          fontFamily: {
+            display: ["Inter", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "0.75rem",
+          },
+          backgroundImage: {
+            'hero-gradient': 'linear-gradient(135deg, #7c3aed 0%, #fb923c 100%)',
+          }
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass {
+      background: rgba(124, 58, 237, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+    }
+    .float-slow { animation: float 9s ease-in-out infinite; }
+    .float-slower { animation: float 11s ease-in-out infinite 0.5s; }
+    @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); } 33% { transform: translateY(-8px) translateX(4px); } 66% { transform: translateY(-4px) translateX(-4px); } }
+    .card-lift:hover { transform: translateY(-4px); transition: transform 0.2s ease; }
+  </style>
+  <script src="auth.js"></script>
+</head>
+
+<body class="bg-purple-950 text-slate-50 antialiased" onload="unimindRequireAuthOnLoad('signin.html')">
+  <!-- Movable background orbs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+    <div class="absolute top-20 right-0 w-80 h-80 bg-primary/20 rounded-full blur-3xl float-slow"></div>
+    <div class="absolute bottom-40 left-0 w-72 h-72 bg-fuchsia-500/15 rounded-full blur-3xl float-slower"></div>
+  </div>
+  <!-- Shared top nav -->
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div
+      class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <div class="flex items-center space-x-2">
+        <div class="bg-white p-1.5 rounded-lg flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-xl font-bold">auto_awesome</span>
+        </div>
+        <span class="text-xl font-extrabold tracking-tight text-white">UniMind</span>
+      </div>
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a class="text-white hover:text-primary transition-colors" href="dashboard.html">Dashboard</a>
+        <a class="text-white/70 hover:text-white transition-colors" href="health.html">Health</a>
+        <a class="text-white/70 hover:text-white transition-colors" href="finance.html">Finance</a>
+        <a class="text-white/70 hover:text-white transition-colors" href="productivity.html">Productivity</a>
+        <a class="text-white/70 hover:text-white transition-colors" href="lifestyle.html">Lifestyle</a>
+        <a class="text-white/70 hover:text-white transition-colors" href="insights.html">Insights</a>
+        <a class="text-white/70 hover:text-white transition-colors" href="analytics.html">Analytics</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button class="hidden sm:block text-sm font-semibold text-white/80 hover:text-white px-4 py-2"
+          onclick="window.location.href='settings.html'">Settings</button>
+        <button
+          class="bg-white text-primary px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:bg-opacity-90 transition-all active:scale-95"
+          onclick="window.location.href='ai-chat.html'">
+          Open AI
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-28 pb-16 px-6 bg-gradient-to-b from-purple-950 via-purple-900 to-purple-950 min-h-screen">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <!-- Greeting + summary -->
+      <section class="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)] items-stretch relative z-10">
+        <div
+          class="rounded-3xl bg-gradient-to-br from-purple-500 via-fuchsia-500 to-orange-400 p-[1px] shadow-2xl">
+          <div class="rounded-3xl bg-purple-950/80 p-6 md:p-8 flex flex-col justify-between h-full">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <p class="text-sm text-slate-300">Good morning,</p>
+                <h1 class="text-2xl md:text-3xl font-bold mt-1">User</h1>
+              </div>
+              <button
+                class="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-medium text-slate-50 hover:bg-white/5">
+                <span class="material-symbols-outlined text-base">refresh</span>
+                Sync now
+              </button>
+            </div>
+            <p class="text-sm font-semibold text-slate-300">Today's AI Summary</p>
+            <p class="text-sm md:text-base text-slate-200 max-w-xl mt-1">Tap to view personalized insights. Great job! You've exercised 4 days this week.</p>
+            <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
+              <a href="steps-overview.html" class="rounded-2xl bg-slate-900/80 p-4 border border-emerald-500/40 card-lift block">
+                <p class="text-xs text-emerald-300 mb-1">Steps Today</p>
+                <p class="text-lg font-semibold">8,547 <span class="text-xs font-normal">steps</span></p>
+                <p class="text-xs text-slate-300 mt-1">85% of daily goal.</p>
+              </a>
+              <a href="savings-goals.html" class="rounded-2xl bg-slate-900/80 p-4 border border-sky-500/40 card-lift block">
+                <p class="text-xs text-sky-300 mb-1">Saved This Month</p>
+                <p class="text-lg font-semibold">--</p>
+                <p class="text-xs text-slate-300 mt-1">Weekly Progress: --</p>
+              </a>
+              <a href="tasks-overview.html" class="rounded-2xl bg-slate-900/80 p-4 border border-amber-500/40 card-lift block">
+                <p class="text-xs text-amber-300 mb-1">Tasks Done</p>
+                <p class="text-lg font-semibold">12/15</p>
+                <p class="text-xs text-slate-300 mt-1">Tasks completed today.</p>
+              </a>
+              <a href="weekly-progress-overview.html" class="rounded-2xl bg-slate-900/80 p-4 border border-pink-500/40 card-lift block">
+                <p class="text-xs text-pink-300 mb-1">Weekly Progress</p>
+                <p class="text-lg font-semibold">84%</p>
+                <p class="text-xs text-slate-300 mt-1">Track all domains. Tap to open.</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <aside class="space-y-4">
+          <div class="rounded-3xl bg-slate-900/80 border border-slate-700/60 p-5 relative z-10">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-sm font-semibold">Quick Actions</h2>
+              <a href="quick-actions.html" class="text-xs text-primary hover:underline">See all</a>
+            </div>
+            <div class="space-y-2 text-sm">
+              <button onclick="window.location.href='ai-chat.html'" class="w-full flex items-center justify-between rounded-2xl bg-slate-800/80 px-3 py-2.5 hover:bg-slate-700 transition card-lift">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">chat</span> AI Chat</span>
+                <span class="material-symbols-outlined text-xs text-slate-300">arrow_forward</span>
+              </button>
+              <button onclick="window.location.href='health.html'" class="w-full flex items-center justify-between rounded-2xl bg-slate-800/50 px-3 py-2.5 hover:bg-slate-700/70 transition card-lift">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-400 text-base">favorite</span> Health</span>
+              </button>
+              <button onclick="window.location.href='finance.html'" class="w-full flex items-center justify-between rounded-2xl bg-slate-800/50 px-3 py-2.5 hover:bg-slate-700/70 transition card-lift">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-sky-400 text-base">savings</span> Finance</span>
+              </button>
+              <button onclick="window.location.href='productivity.html'" class="w-full flex items-center justify-between rounded-2xl bg-slate-800/50 px-3 py-2.5 hover:bg-slate-700/70 transition card-lift">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-amber-400 text-base">task_alt</span> Productivity</span>
+              </button>
+              <button onclick="window.location.href='lifestyle.html'" class="w-full flex items-center justify-between rounded-2xl bg-slate-800/50 px-3 py-2.5 hover:bg-slate-700/70 transition card-lift">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-pink-400 text-base">self_improvement</span> Lifestyle</span>
+              </button>
+              <button onclick="window.location.href='weekly-progress-overview.html'" class="w-full flex items-center justify-between rounded-2xl bg-slate-800/50 px-3 py-2.5 hover:bg-slate-700/70 transition card-lift">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-pink-400 text-base">trending_up</span> Weekly Progress</span>
+                <span class="material-symbols-outlined text-xs text-slate-300">arrow_forward</span>
+              </button>
+              <button onclick="window.location.href='progress-comparison.html'" class="w-full flex items-center justify-between rounded-2xl bg-slate-800/50 px-3 py-2.5 hover:bg-slate-700/70 transition card-lift">
+                <span class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">compare_arrows</span> Progress Comparison</span>
+                <span class="material-symbols-outlined text-xs text-slate-300">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+          <div class="rounded-3xl bg-slate-900/80 border border-slate-700/60 p-5 relative z-10">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-sm font-semibold">Recent Insights</h2>
+              <a href="insights.html" class="text-xs text-primary hover:underline">See All</a>
+            </div>
+            <p class="text-xs text-slate-300">You're most productive on Wednesday mornings. Exercise consistency improves sleep quality by 35%.</p>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+</body>
+
+</html>
+

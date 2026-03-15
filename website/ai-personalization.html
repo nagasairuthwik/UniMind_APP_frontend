@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · AI Personalization</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>tailwind.config = { theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); } .float-slow { animation: float 8s ease-in-out infinite; } @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }</style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <a href="settings.html" class="flex items-center gap-2 text-white/80 hover:text-white"><span class="material-symbols-outlined">arrow_back</span> Back</a>
+      <a href="index.html" class="text-xl font-extrabold text-white">UniMind</a>
+      <a href="help-support.html" class="text-sm text-white/80 hover:text-white">Help</a>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-2xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-white">AI Personalization</h1>
+        <p class="text-slate-400 mt-1">Customize how UniMind learns and interacts with you</p>
+      </div>
+      <div class="space-y-6">
+        <div class="p-5 rounded-2xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-between gap-4">
+          <div>
+            <h3 class="font-semibold text-white">Proactive Recommendations</h3>
+            <p class="text-sm text-slate-400">AI suggests actions without being asked</p>
+          </div>
+          <input type="checkbox" checked class="rounded border-purple-400 text-primary focus:ring-primary w-11 h-6" />
+        </div>
+        <div class="p-5 rounded-2xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-between gap-4">
+          <div>
+            <h3 class="font-semibold text-white">Continuous Learning</h3>
+            <p class="text-sm text-slate-400">AI adapts based on your behavior patterns</p>
+          </div>
+          <input type="checkbox" checked class="rounded border-purple-400 text-primary focus:ring-primary w-11 h-6" />
+        </div>
+        <div class="p-5 rounded-2xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-between gap-4">
+          <div>
+            <h3 class="font-semibold text-white">Detailed Explanations</h3>
+            <p class="text-sm text-slate-400">Get in-depth reasoning for recommendations</p>
+          </div>
+          <input type="checkbox" checked class="rounded border-purple-400 text-primary focus:ring-primary w-11 h-6" />
+        </div>
+        <div class="p-5 rounded-2xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-between gap-4">
+          <div>
+            <h3 class="font-semibold text-white">Adaptive Scheduling</h3>
+            <p class="text-sm text-slate-400">AI optimizes your routine automatically</p>
+          </div>
+          <input type="checkbox" class="rounded border-purple-400 text-primary focus:ring-primary w-11 h-6" />
+        </div>
+      </div>
+      <p class="mt-6 text-sm text-slate-400">Note: Changes to AI behavior may take 2–3 days to fully reflect in your experience.</p>
+      <a href="settings.html" class="inline-block mt-6 text-sm text-slate-400 hover:text-white">← Back to Settings</a>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · How it works</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>tailwind.config = { theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); }
+    .float-slow { animation: float 8s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .accordion-content { overflow: hidden; transition: max-height 0.3s ease; }
+  </style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <div class="flex items-center space-x-2"><div class="bg-white p-1.5 rounded-lg"><span class="material-symbols-outlined text-primary text-xl font-bold">auto_awesome</span></div><a href="index.html" class="text-xl font-extrabold text-white">UniMind</a></div>
+      <div class="hidden md:flex items-center space-x-6 text-sm"><a class="text-white/70 hover:text-white" href="settings.html">Settings</a><a class="text-white/70 hover:text-white" href="help-support.html">Help</a></div>
+      <a href="ai-chat.html" class="bg-white text-primary px-5 py-2.5 rounded-full text-sm font-bold">Open AI</a>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-white">Your AI-Powered Life Assistant</h1>
+        <p class="text-slate-400 mt-2">UniMind combines artificial intelligence with your key life domains to provide personalized recommendations, track your progress, and help you achieve your goals across health, productivity, finance, and lifestyle.</p>
+      </div>
+      <p class="text-sm font-semibold text-slate-400 mb-4">Key Features: Personalized &amp; Adaptive plans • Smart Insights &amp; Actionable tips • Daily Tracking &amp; Progress • AI-Powered Goal Setting</p>
+
+      <!-- Health & Fitness -->
+      <div class="mb-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 overflow-hidden">
+        <button type="button" onclick="toggle('health')" class="w-full flex items-center justify-between p-5 text-left">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl">favorite</span>
+            <div>
+              <h2 class="font-bold text-white">Health &amp; Fitness</h2>
+              <p class="text-sm text-slate-400">AI-powered fitness tracking and personalized health recommendations</p>
+            </div>
+          </div>
+          <span id="health-chevron" class="material-symbols-outlined text-slate-400">expand_less</span>
+        </button>
+        <div id="health" class="accordion-content max-h-[800px]">
+          <div class="px-5 pb-5 space-y-4 text-sm">
+            <p class="text-slate-300 font-medium">Features:</p>
+            <ul class="space-y-2 text-slate-400">
+              <li><strong class="text-white">Personalized Exercise Plans</strong> — e.g. "Create my exercise plan with 30 min cardio, strength training, and yoga sessions tailored to me."</li>
+              <li><strong class="text-white">Progress Tracking</strong> — Track daily steps, weight, BMR, sleep, workout schedule with daily updates.</li>
+              <li><strong class="text-white">Smart Habit Suggestions</strong> — e.g. "Take a 30-minute walk after dinner" or "Drink water every 2 hours" after workouts.</li>
+              <li><strong class="text-white">Real-time Insights</strong> — e.g. "You've been active for 3 hours. Take a 5-minute stretch break."</li>
+            </ul>
+            <p class="text-slate-300 font-medium mt-4">Steps: 1) Set fitness goals 2) AI creates personalized plans 3) Track daily activities 4) Receive smart insights 5) View progress reports.</p>
+            <a href="health.html" class="inline-flex items-center gap-2 text-primary font-semibold">Try Health &amp; Fitness →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Productivity -->
+      <div class="mb-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 overflow-hidden">
+        <button type="button" onclick="toggle('productivity')" class="w-full flex items-center justify-between p-5 text-left">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl">task_alt</span>
+            <div>
+              <h2 class="font-bold text-white">Productivity</h2>
+              <p class="text-sm text-slate-400">Intelligent task management and time optimization</p>
+            </div>
+          </div>
+          <span id="productivity-chevron" class="material-symbols-outlined text-slate-400">expand_more</span>
+        </button>
+        <div id="productivity" class="accordion-content max-h-0">
+          <div class="px-5 pb-5 space-y-4 text-sm">
+            <p class="text-slate-300 font-medium">Features:</p>
+            <ul class="space-y-2 text-slate-400">
+              <li><strong class="text-white">Smart Task Prioritization</strong> — Prioritize tasks by deadline and importance.</li>
+              <li><strong class="text-white">Focus Mode &amp; Time Blocks</strong> — Schedule 2-hour deep work blocks with no notifications.</li>
+              <li><strong class="text-white">Meeting Optimization</strong> — Suggest which meetings can be async or shortened.</li>
+              <li><strong class="text-white">Daily Recap &amp; Planning</strong> — Summarize what you completed and plan tomorrow's top 3 tasks.</li>
+            </ul>
+            <a href="productivity.html" class="inline-flex items-center gap-2 text-primary font-semibold">Try Productivity →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finance -->
+      <div class="mb-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 overflow-hidden">
+        <button type="button" onclick="toggle('finance')" class="w-full flex items-center justify-between p-5 text-left">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl">savings</span>
+            <div>
+              <h2 class="font-bold text-white">Finance Management</h2>
+              <p class="text-sm text-slate-400">Smart budgeting and savings optimization</p>
+            </div>
+          </div>
+          <span id="finance-chevron" class="material-symbols-outlined text-slate-400">expand_more</span>
+        </button>
+        <div id="finance" class="accordion-content max-h-0">
+          <div class="px-5 pb-5 space-y-4 text-sm">
+            <p class="text-slate-300 font-medium">Features:</p>
+            <ul class="space-y-2 text-slate-400">
+              <li><strong class="text-white">Budget Creation &amp; Tracking</strong> — Create monthly budget with 20% savings and track spending.</li>
+              <li><strong class="text-white">Expense Categorization</strong> — Categorize last 30 days of expenses and show trends.</li>
+              <li><strong class="text-white">Savings Goals</strong> — Set goal to save for emergency fund by a date.</li>
+              <li><strong class="text-white">Spending Alerts</strong> — Alert when you exceed 80% of a category budget.</li>
+            </ul>
+            <a href="finance.html" class="inline-flex items-center gap-2 text-primary font-semibold">Try Finance →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lifestyle -->
+      <div class="mb-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 overflow-hidden">
+        <button type="button" onclick="toggle('lifestyle')" class="w-full flex items-center justify-between p-5 text-left">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl">self_improvement</span>
+            <div>
+              <h2 class="font-bold text-white">Lifestyle Optimization</h2>
+              <p class="text-sm text-slate-400">Holistic wellness and daily routine improvement</p>
+            </div>
+          </div>
+          <span id="lifestyle-chevron" class="material-symbols-outlined text-slate-400">expand_more</span>
+        </button>
+        <div id="lifestyle" class="accordion-content max-h-0">
+          <div class="px-5 pb-5 space-y-4 text-sm">
+            <p class="text-slate-300 font-medium">Features:</p>
+            <ul class="space-y-2 text-slate-400">
+              <li><strong class="text-white">Sleep &amp; Recovery Tracking</strong> — Track sleep hours and get wind-down routine suggestions.</li>
+              <li><strong class="text-white">Stress &amp; Mood Check-ins</strong> — Reminders to log mood and stress level twice daily.</li>
+              <li><strong class="text-white">Work-Life Balance</strong> — Suggest breaks and offline time based on your calendar.</li>
+              <li><strong class="text-white">Habit &amp; Routine Builder</strong> — Build morning routine: meditation, exercise, breakfast.</li>
+            </ul>
+            <a href="lifestyle.html" class="inline-flex items-center gap-2 text-primary font-semibold">Try Lifestyle →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-10 p-6 rounded-2xl bg-primary/20 border border-primary/40">
+        <h3 class="font-bold text-white text-lg">Ready to Get Started?</h3>
+        <p class="text-slate-300 mt-1">Explore each domain and let AI help you achieve your goals!</p>
+        <a href="dashboard.html" class="inline-block mt-4 px-6 py-3 rounded-xl bg-primary font-semibold text-white">Go to Dashboard</a>
+      </div>
+      <a href="help-support.html" class="inline-block mt-6 text-sm text-slate-400 hover:text-white">← Back to Help &amp; Support</a>
+    </div>
+  </main>
+  <script>
+    function toggle(id) {
+      var el = document.getElementById(id);
+      var chevron = document.getElementById(id + '-chevron');
+      var isOpen = el.style.maxHeight && el.style.maxHeight !== '0px';
+      document.querySelectorAll('.accordion-content').forEach(function(e) { e.style.maxHeight = '0'; });
+      document.querySelectorAll('[id$="-chevron"]').forEach(function(e) { e.textContent = 'expand_more'; });
+      if (!isOpen) { el.style.maxHeight = el.scrollHeight + 'px'; chevron.textContent = 'expand_less'; }
+    }
+  </script>
+</body>
+</html>

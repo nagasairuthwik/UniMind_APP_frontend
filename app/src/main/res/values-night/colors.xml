@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme palette (when system dark mode is on) -->
+    <color name="purple_200">#FF9FA8DA</color>
+    <color name="purple_500">#FF1A237E</color>
+    <color name="purple_700">#FF0D1040</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="surface">#FF1E1E1E</color>
+    <color name="screen_background">#FF121212</color>
+    <color name="divider">#FF404040</color>
+    <color name="on_surface">#FFFFFFFF</color>
+    <color name="text_on_light_bg">#FF1C1B1F</color>
+    <color name="chat_bubble_ai_bg">#FF2D2D2D</color>
+    <color name="chat_input_bg_color">#FF2D2D2D</color>
+    <color name="ai_tip_bg">#FF2D2D2D</color>
+    <color name="ai_tip_border">#FF404040</color>
+    <color name="splash_gradient_end">#FF3949AB</color>
+    <!-- Welcome / auth screens -->
+    <color name="welcome_background">#FF121212</color>
+    <color name="welcome_title">#FFE0E0E0</color>
+    <color name="welcome_subtitle">#FFB0B0B0</color>
+    <color name="welcome_card_bg">#FF1E1E1E</color>
+    <color name="welcome_feature_title">#FFE0E0E0</color>
+    <color name="welcome_feature_desc">#FFB0B0B0</color>
+    <color name="sign_in_link">#FFB0BCFF</color>
+    <color name="login_check_btn_text">#FFD0BCFF</color>
+    <color name="login_check_legal_text">#FFB0B0B0</color>
+    <color name="login_check_link">#FFD0BCFF</color>
+    <color name="signup_background">#FF121212</color>
+    <color name="signup_title">#FFE0E0E0</color>
+    <color name="signup_subtitle">#FFB0B0B0</color>
+    <color name="signup_label">#FFE0E0E0</color>
+    <color name="signup_input_border">#FF606060</color>
+    <color name="signup_hint">#FFB0B0B0</color>
+    <color name="signup_password_hint">#FF808080</color>
+    <!-- Domain (keep recognizable) -->
+    <color name="domain_health_bg">#FFE91E63</color>
+    <color name="domain_productivity_bg">#FF2196F3</color>
+    <color name="domain_finance_bg">#FF4CAF50</color>
+    <color name="domain_lifestyle_bg">#FFFF9800</color>
+    <!-- Goals -->
+    <color name="goal_chip_added_bg">#FF2D2640</color>
+    <color name="goal_chip_suggested_bg">#FF2D2D2D</color>
+    <color name="goals_screen_bg">#FF121212</color>
+    <color name="goals_text_primary">#FFE0E0E0</color>
+    <color name="goals_text_secondary">#FFB0B0B0</color>
+    <color name="goals_input_dark_bg">#FF2D2D2D</color>
+    <color name="goals_input_dark_hint">#FF808080</color>
+    <!-- AI Personality -->
+    <color name="ai_personality_card_bg">#FF1E1A24</color>
+    <color name="ai_personality_card_border">#FF9FA8DA</color>
+    <color name="ai_personality_icon_bg">#FF1A237E</color>
+    <!-- Permissions -->
+    <color name="permission_card_bg">#FF2D2D2D</color>
+    <color name="permission_icon_notifications">#FF64B5F6</color>
+    <color name="permission_icon_location">#FF81C784</color>
+    <color name="permission_icon_calendar">#FF9FA8DA</color>
+    <color name="permission_icon_health">#FFF44336</color>
+    <color name="permissions_privacy_highlight">#FF64B5F6</color>
+    <!-- Dashboard / Home -->
+    <color name="home_greeting_text">#FFE0E0E0</color>
+    <color name="home_card_title">#FFE0E0E0</color>
+    <color name="home_card_subtitle">#FFB0B0B0</color>
+    <color name="home_see_all">#FFB0BCFF</color>
+    <color name="home_nav_selected">#FFB0BCFF</color>
+    <color name="home_nav_unselected">#FFB0B0B0</color>
+    <color name="home_gold">#FFD4AF37</color>
+    <color name="home_gold_dark">#FFC9A227</color>
+    <color name="home_off_white">#FF1E1E1E</color>
+    <!-- AI Personalization -->
+    <color name="ai_pers_card_purple">#FF2D2640</color>
+    <color name="ai_pers_card_yellow">#FF3D3820</color>
+    <color name="ai_pers_card_blue">#FF1E2A3D</color>
+    <color name="ai_pers_card_green">#FF1E3320</color>
+    <color name="ai_pers_note_bg">#FF1A2A3D</color>
+    <color name="ai_pers_icon_purple">#FF9FA8DA</color>
+    <color name="ai_pers_icon_yellow">#FFEDDB3F</color>
+    <color name="ai_pers_icon_blue">#FF64B5F6</color>
+    <color name="ai_pers_icon_green">#FF81C784</color>
+    <!-- Privacy & Security -->
+    <color name="privacy_secure_bg">#FF1B2E1B</color>
+    <color name="privacy_secure_border">#FF4CAF50</color>
+    <color name="privacy_secure_title_color">#FF81C784</color>
+    <color name="privacy_secure_subtitle_color">#FFA5D6A7</color>
+    <color name="privacy_row_bg">#FF2D2D2D</color>
+    <color name="privacy_icon_blue">#FF64B5F6</color>
+    <color name="privacy_delete_card_bg">#FF3D2020</color>
+    <color name="privacy_delete_text">#FFEF9A9A</color>
+    <!-- Password & Authentication -->
+    <color name="pass_auth_card_purple">#FF2D2640</color>
+    <color name="pass_auth_card_blue">#FF1A2A3D</color>
+    <color name="pass_auth_card_green">#FF1B2E1B</color>
+    <color name="pass_auth_icon_purple">@color/purple_200</color>
+    <color name="pass_auth_icon_blue">#FF64B5F6</color>
+    <color name="pass_auth_icon_green">#FF81C784</color>
+    <!-- Help & Support -->
+    <color name="help_need_help_bg">#FF1E1A24</color>
+    <color name="help_need_help_subtitle_color">#FFB0B0B0</color>
+    <color name="help_chat_blue">#FF64B5F6</color>
+    <!-- Overview / modal close button (theme-aware: black circle + white icon in dark theme) -->
+    <color name="overview_close_icon">#FFFFFFFF</color>
+    <color name="overview_close_circle_bg">#E6000000</color>
+</resources>

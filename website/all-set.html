@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · All set</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>tailwind.config = { theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); } .app-bg { background: linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%); }</style>
+</head>
+<body class="app-bg min-h-screen text-slate-50 antialiased">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <div class="flex items-center space-x-2">
+        <div class="bg-white p-1.5 rounded-lg"><span class="material-symbols-outlined text-primary text-xl font-bold">auto_awesome</span></div>
+        <a href="index.html" class="text-xl font-extrabold text-white">UniMind</a>
+      </div>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen flex flex-col items-center justify-center">
+    <div class="max-w-md mx-auto space-y-8 text-center">
+      <div class="flex justify-center">
+        <div class="w-20 h-20 rounded-full bg-primary/30 border-2 border-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-5xl text-primary">check_circle</span>
+        </div>
+      </div>
+      <h1 class="text-3xl font-bold text-white">You're all set!</h1>
+      <p class="text-slate-300">Your account is ready. Here’s what you can do next:</p>
+      <ul class="text-left space-y-3 text-slate-300">
+        <li class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">favorite</span> Track steps and health in the Health tab</li>
+        <li class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">savings</span> Add expenses and savings goals in Finance</li>
+        <li class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">task_alt</span> Create tasks and use focus timer in Productivity</li>
+        <li class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">smart_toy</span> Chat with UniMind AI for tips and insights</li>
+      </ul>
+      <button onclick="location.href='dashboard.html'" class="w-full rounded-xl bg-primary hover:bg-violet-600 py-3.5 font-semibold text-white transition-colors">Go to Dashboard</button>
+    </div>
+  </main>
+</body>
+</html>

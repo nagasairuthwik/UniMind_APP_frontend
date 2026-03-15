@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · Lifestyle Analytics</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>tailwind.config = { theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); }</style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <div class="flex items-center space-x-2"><div class="bg-white p-1.5 rounded-lg"><span class="material-symbols-outlined text-primary text-xl font-bold">auto_awesome</span></div><a href="index.html" class="text-xl font-extrabold text-white">UniMind</a></div>
+      <div class="hidden md:flex items-center space-x-6 text-sm"><a class="text-white/70 hover:text-white" href="dashboard.html">Dashboard</a><a class="text-white/70 hover:text-white" href="lifestyle.html">Lifestyle</a><a class="text-white/70 hover:text-white" href="analytics.html">Analytics</a></div>
+      <a href="ai-chat.html" class="bg-white text-primary px-5 py-2.5 rounded-full text-sm font-bold">Open AI</a>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-2xl mx-auto space-y-8">
+      <div>
+        <h1 class="text-2xl font-bold">Lifestyle Analytics</h1>
+        <p class="text-slate-400">Detailed Performance Report</p>
+      </div>
+      <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-6">
+        <p class="text-sm text-slate-400">Current Score</p>
+        <p class="text-4xl font-bold text-white">82%</p>
+        <p class="text-sm text-emerald-400 font-semibold mt-1">+8%</p>
+        <p class="text-xs text-slate-400 mt-2">Weekly Trend</p>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-4">Key Metrics</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-4"><p class="text-xs text-slate-400">Avg Sleep Hours</p><p class="text-xl font-bold text-white">7.2h</p></div>
+          <div class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-4"><p class="text-xs text-slate-400">Meditation Streak</p><p class="text-xl font-bold text-white">12 days</p></div>
+          <div class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-4"><p class="text-xs text-slate-400">Social Activities</p><p class="text-xl font-bold text-white">4</p></div>
+          <div class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-4"><p class="text-xs text-slate-400">Screen Time</p><p class="text-xl font-bold text-white">5.5h</p></div>
+        </div>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">This Week's Achievements</h2>
+        <div class="space-y-2">
+          <div class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-4"><p class="font-medium text-white">Sleep Consistent</p><p class="text-sm text-slate-400">Maintained regular sleep schedule</p></div>
+          <div class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-4"><p class="font-medium text-white">Mindful Moments</p><p class="text-sm text-slate-400">12-day meditation streak</p></div>
+        </div>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">AI Recommendations</h2>
+        <div class="space-y-2">
+          <div class="rounded-xl bg-primary/10 border border-primary/30 p-4"><p class="font-medium text-white">Maintain Sleep Schedule</p><p class="text-sm text-slate-300">Continue current bedtime routine for optimal wellbeing</p></div>
+          <div class="rounded-xl bg-primary/10 border border-primary/30 p-4"><p class="font-medium text-white">Reduce Screen Time</p><p class="text-sm text-slate-300">Limit evening screen use to improve sleep quality</p></div>
+          <div class="rounded-xl bg-primary/10 border border-primary/30 p-4"><p class="font-medium text-white">Increase Social Time</p><p class="text-sm text-slate-300">Schedule 1-2 more social activities per week</p></div>
+        </div>
+      </div>
+      <div>
+        <h2 class="font-semibold text-white mb-3">Next Week Goals</h2>
+        <ul class="list-disc list-inside text-slate-300 space-y-1">
+          <li>Maintain 7.5h average sleep</li>
+          <li>Extend meditation streak to 19 days</li>
+          <li>Reduce screen time to under 5 hours</li>
+        </ul>
+      </div>
+      <a href="lifestyle.html" class="inline-block text-sm text-slate-400 hover:text-white">← Back to Lifestyle</a>
+      <a href="analytics.html" class="inline-block text-sm text-slate-400 hover:text-white ml-4">← Analytics</a>
+    </div>
+  </main>
+</body>
+</html>

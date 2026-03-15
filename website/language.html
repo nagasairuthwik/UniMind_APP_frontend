@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · Language &amp; Region</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>tailwind.config = { theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); }</style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <a href="settings.html" class="flex items-center gap-2 text-white/80 hover:text-white"><span class="material-symbols-outlined">arrow_back</span> Back</a>
+      <a href="index.html" class="text-xl font-extrabold text-white">UniMind</a>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-xl mx-auto">
+      <h1 class="text-2xl font-bold text-white">Language</h1>
+      <p class="text-slate-400 mt-1 mb-8">Choose your preferred app language</p>
+      <div class="space-y-2">
+        <label class="flex items-center gap-4 p-4 rounded-2xl bg-purple-900/40 border-2 border-primary cursor-pointer">
+          <input type="radio" name="lang" value="en" checked class="text-primary focus:ring-primary" />
+          <span class="font-medium text-white">English</span>
+        </label>
+        <label class="flex items-center gap-4 p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 cursor-pointer hover:border-purple-500/50">
+          <input type="radio" name="lang" value="hi" class="text-primary focus:ring-primary" />
+          <span class="font-medium text-white">हिन्दी</span>
+        </label>
+        <label class="flex items-center gap-4 p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 cursor-pointer hover:border-purple-500/50">
+          <input type="radio" name="lang" value="ta" class="text-primary focus:ring-primary" />
+          <span class="font-medium text-white">தமிழ்</span>
+        </label>
+        <label class="flex items-center gap-4 p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 cursor-pointer hover:border-purple-500/50">
+          <input type="radio" name="lang" value="te" class="text-primary focus:ring-primary" />
+          <span class="font-medium text-white">తెలుగు</span>
+        </label>
+      </div>
+      <p class="text-sm text-slate-400 mt-6">Current: English (US). More languages coming soon.</p>
+      <a href="settings.html" class="inline-block mt-6 text-sm text-slate-400 hover:text-white">← Back to Settings</a>
+    </div>
+  </main>
+</body>
+</html>

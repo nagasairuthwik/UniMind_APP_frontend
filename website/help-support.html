@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · Help &amp; Support</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>tailwind.config = { theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); } .card-hover:hover { transform: translateY(-2px); }</style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <a href="settings.html" class="flex items-center gap-2 text-white/80 hover:text-white"><span class="material-symbols-outlined">arrow_back</span> Back</a>
+      <a href="index.html" class="text-xl font-extrabold text-white">UniMind</a>
+      <a href="how-it-works.html" class="text-sm text-white/80 hover:text-white">How it works</a>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-10">
+        <h1 class="text-2xl font-bold text-white">Need Help?</h1>
+        <p class="text-slate-400 mt-1">We're here to assist you 24/7</p>
+      </div>
+
+      <div class="space-y-3 mb-10">
+        <a href="how-it-works.html" class="flex items-center gap-4 p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30 card-hover transition-transform">
+          <span class="material-symbols-outlined text-primary text-2xl">menu_book</span>
+          <div class="flex-1">
+            <h3 class="font-semibold text-white">How It Works</h3>
+            <p class="text-sm text-slate-400">Learn how UniMind helps you in Health, Productivity, Finance &amp; Lifestyle</p>
+          </div>
+          <span class="material-symbols-outlined text-slate-500">chevron_right</span>
+        </a>
+        <div class="flex items-center gap-4 p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30">
+          <span class="material-symbols-outlined text-primary text-2xl">chat</span>
+          <div class="flex-1">
+            <h3 class="font-semibold text-white">Chat Support</h3>
+            <p class="text-sm text-slate-400">Instant help</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30">
+          <span class="material-symbols-outlined text-primary text-2xl">mail</span>
+          <div class="flex-1">
+            <h3 class="font-semibold text-white">Email Us</h3>
+            <p class="text-sm text-slate-400">Get detailed help</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="font-semibold text-white mb-3">Frequently Asked Questions</h2>
+      <div class="space-y-2 mb-10">
+        <details class="p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30">
+          <summary class="font-medium text-white cursor-pointer">How does AI personalization work?</summary>
+          <p class="text-sm text-slate-400 mt-2">Our AI learns from your patterns and preferences to give you tailored recommendations across health, finance, productivity, and lifestyle.</p>
+        </details>
+        <details class="p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30">
+          <summary class="font-medium text-white cursor-pointer">Is my data secure?</summary>
+          <p class="text-sm text-slate-400 mt-2">Yes, all data is encrypted end-to-end and we never share it with third parties.</p>
+        </details>
+        <details class="p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30">
+          <summary class="font-medium text-white cursor-pointer">Can I export my data?</summary>
+          <p class="text-sm text-slate-400 mt-2">You can export reports anytime from Settings → Privacy &amp; Security → Download My Data.</p>
+        </details>
+        <details class="p-4 rounded-2xl bg-purple-900/40 border border-purple-500/30">
+          <summary class="font-medium text-white cursor-pointer">How to set custom goals?</summary>
+          <p class="text-sm text-slate-400 mt-2">Navigate to the Goal Setting screen from Dashboard or Insights, then add or edit your goals per domain.</p>
+        </details>
+      </div>
+
+      <h2 class="font-semibold text-white mb-3">More resources</h2>
+      <div class="flex flex-wrap gap-3">
+        <a href="#" class="px-4 py-2 rounded-xl bg-purple-800/50 border border-purple-500/30 text-sm font-medium text-white hover:bg-purple-700/50">User Guide</a>
+        <a href="#" class="px-4 py-2 rounded-xl bg-purple-800/50 border border-purple-500/30 text-sm font-medium text-white hover:bg-purple-700/50">Video Tutorials</a>
+        <a href="#" class="px-4 py-2 rounded-xl bg-purple-800/50 border border-purple-500/30 text-sm font-medium text-white hover:bg-purple-700/50">Community Forum</a>
+      </div>
+      <p class="text-xs text-slate-500 mt-8">App Version 1.0.0 • © 2026 UniMind. All rights reserved.</p>
+      <a href="settings.html" class="inline-block mt-6 text-sm text-slate-400 hover:text-white">← Back to Settings</a>
+    </div>
+  </main>
+</body>
+</html>

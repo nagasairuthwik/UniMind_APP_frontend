@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>UniMind · Notifications</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <script>tailwind.config = { darkMode: "class", theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
+  <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); }</style>
+</head>
+<body class="bg-purple-950 text-slate-50 antialiased">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between glass rounded-full px-6 py-3">
+      <div class="flex items-center space-x-2">
+        <div class="bg-white p-1.5 rounded-lg"><span class="material-symbols-outlined text-primary text-xl font-bold">auto_awesome</span></div>
+        <a href="index.html" class="text-xl font-extrabold text-white">UniMind</a>
+      </div>
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a class="text-white/70 hover:text-white" href="dashboard.html">Dashboard</a>
+        <a class="text-white/70 hover:text-white" href="health.html">Health</a>
+        <a class="text-white/70 hover:text-white" href="finance.html">Finance</a>
+        <a class="text-white/70 hover:text-white" href="productivity.html">Productivity</a>
+        <a class="text-white/70 hover:text-white" href="lifestyle.html">Lifestyle</a>
+        <a class="text-white/70 hover:text-white" href="insights.html">Insights</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a class="hidden sm:block text-sm font-semibold text-white/80 hover:text-white px-4 py-2" href="settings.html">Settings</a>
+        <a class="bg-white text-primary px-5 py-2.5 rounded-full text-sm font-bold" href="ai-chat.html">Open AI</a>
+      </div>
+    </div>
+  </nav>
+  <main class="pt-28 pb-16 px-6 min-h-screen">
+    <div class="max-w-7xl mx-auto space-y-6">
+      <h1 class="text-2xl md:text-3xl font-bold">Notifications</h1>
+      <p class="text-slate-300">Task reminders, goals, finance. Mirrors NotificationsActivity.</p>
+      <div class="space-y-3">
+        <div class="rounded-2xl bg-slate-800/80 border border-slate-700 p-4 flex justify-between items-center"><span>Task reminder · Finish deep work</span><span class="text-slate-400 text-sm">5 min ago</span></div>
+        <div class="rounded-2xl bg-slate-800/80 border border-slate-700 p-4 flex justify-between items-center"><span>Health goal · 10k steps streak</span><span class="text-slate-400 text-sm">Today</span></div>
+        <div class="rounded-2xl bg-slate-800/80 border border-slate-700 p-4 flex justify-between items-center"><span>Finance · Salary updated</span><span class="text-slate-400 text-sm">Yesterday</span></div>
+      </div>
+      <a href="settings.html" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white">← Back to Settings</a>
+    </div>
+  </main>
+</body>
+</html>
