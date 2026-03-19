@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
   <script src="auth.js"></script>
+  <script src="api.js"></script>
   <script>
     tailwind.config = { darkMode: "class", theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };
   </script>
@@ -44,20 +45,48 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-5">
           <p class="text-xs text-slate-400 uppercase tracking-wide">Balance</p>
-          <p class="text-2xl font-bold text-white">₹0</p>
+          <p id="finance-balance" class="text-2xl font-bold text-white">₹0</p>
         </div>
         <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-5">
           <p class="text-xs text-slate-400 uppercase tracking-wide">Monthly Income</p>
-          <p class="text-2xl font-bold text-emerald-400">₹0</p>
+          <p id="finance-income" class="text-2xl font-bold text-emerald-400">₹0</p>
         </div>
         <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-5">
           <p class="text-xs text-slate-400 uppercase tracking-wide">Total Expenses</p>
-          <p class="text-2xl font-bold text-amber-400">₹0</p>
+          <p id="finance-expenses" class="text-2xl font-bold text-amber-400">₹0</p>
         </div>
       </div>
-      <div class="rounded-2xl bg-emerald-500/10 border border-emerald-500/30 p-5">
-        <h3 class="font-semibold text-emerald-300">AI Financial Insight</h3>
-        <p class="text-slate-200 mt-1">Start logging your income and expenses to see personalized savings insights here.</p>
+      <div class="rounded-2xl bg-slate-900/60 border border-emerald-500/30 p-5 space-y-3">
+        <div class="flex flex-col md:flex-row md:items-end gap-3">
+          <div class="flex-1">
+            <label for="salary-input" class="block text-xs text-slate-400 uppercase mb-1">Monthly income</label>
+            <div class="flex rounded-full bg-slate-900 border border-slate-700 px-3 py-2 items-center">
+              <span class="text-slate-400 mr-1 text-sm">₹</span>
+              <input id="salary-input" type="number" min="0" step="0.01" class="flex-1 bg-transparent border-none text-sm text-slate-100 focus:outline-none" placeholder="Enter your monthly income" />
+            </div>
+          </div>
+          <div class="flex-1">
+            <label for="spent-today-input" class="block text-xs text-slate-400 uppercase mb-1">Spent today</label>
+            <div class="flex rounded-full bg-slate-900 border border-slate-700 px-3 py-2 items-center">
+              <span class="text-slate-400 mr-1 text-sm">₹</span>
+              <input id="spent-today-input" type="number" min="0" step="0.01" class="flex-1 bg-transparent border-none text-sm text-slate-100 focus:outline-none" placeholder="Today’s total spend" />
+            </div>
+          </div>
+          <div class="flex-1">
+            <label for="spent-month-input" class="block text-xs text-slate-400 uppercase mb-1">Spent this month</label>
+            <div class="flex rounded-full bg-slate-900 border border-slate-700 px-3 py-2 items-center">
+              <span class="text-slate-400 mr-1 text-sm">₹</span>
+              <input id="spent-month-input" type="number" min="0" step="0.01" class="flex-1 bg-transparent border-none text-sm text-slate-100 focus:outline-none" placeholder="Month-to-date spend" />
+            </div>
+          </div>
+          <button id="finance-ai-button" type="button" class="md:w-auto w-full rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-emerald-950 hover:bg-emerald-400 active:scale-95 mt-2">
+            Get AI insight
+          </button>
+        </div>
+        <div>
+          <h3 class="font-semibold text-emerald-300">AI Financial Insight</h3>
+          <p id="finance-ai-text" class="text-slate-200 mt-1">Start logging your income and expenses to see personalized savings insights here.</p>
+        </div>
       </div>
       <div>
         <h2 class="font-semibold text-white mb-3">Recent Transactions</h2>
@@ -99,5 +128,51 @@
       <a href="dashboard.html" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white">← Back to Dashboard</a>
     </div>
   </main>
+  <script>
+    function financeFormat(amount) {
+      return "₹" + (Number(amount) || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+    }
+
+    function financeLoadState() {
+      const state = unimindGetFinanceState();
+      document.getElementById("salary-input").value = state.monthlySalary || "";
+      document.getElementById("spent-today-input").value = state.spentToday || "";
+      document.getElementById("spent-month-input").value = state.spentMonth || "";
+      document.getElementById("finance-income").textContent = financeFormat(state.monthlySalary);
+      document.getElementById("finance-expenses").textContent = financeFormat(state.spentMonth);
+      const balance = (Number(state.monthlySalary) || 0) - (Number(state.spentMonth) || 0);
+      document.getElementById("finance-balance").textContent = financeFormat(balance);
+    }
+
+    async function handleFinanceAiClick() {
+      const state = {
+        monthlySalary: parseFloat(document.getElementById("salary-input").value || "0"),
+        spentToday: parseFloat(document.getElementById("spent-today-input").value || "0"),
+        spentMonth: parseFloat(document.getElementById("spent-month-input").value || "0"),
+      };
+      unimindSetFinanceState(state);
+      financeLoadState();
+      const btn = document.getElementById("finance-ai-button");
+      const textEl = document.getElementById("finance-ai-text");
+      const prev = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Thinking...";
+      textEl.textContent = "Generating a personalized finance insight...";
+      try {
+        const reply = await unimindAiFinanceInsight(state);
+        textEl.textContent = reply;
+      } catch (err) {
+        textEl.textContent = err.message || "Could not fetch AI insight. Please try again.";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = prev;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      financeLoadState();
+      document.getElementById("finance-ai-button").addEventListener("click", handleFinanceAiClick);
+    });
+  </script>
 </body>
 </html>

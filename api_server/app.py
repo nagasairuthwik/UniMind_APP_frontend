@@ -20,8 +20,14 @@ import smtplib
 import ssl
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify, g, send_from_directory
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from config import Config
+
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 
 try:
     import pymysql
@@ -31,6 +37,35 @@ except ImportError:
     raise
 
 app = Flask(__name__)
+# Allow both mobile app and website frontends (running on different ports / origins)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+# ---------- Gemini AI client (shared for app + website) ----------
+
+gemini_model = None
+
+def get_gemini_model():
+    """Lazy‑init Gemini model using API key from Config."""
+    global gemini_model
+    if gemini_model is not None:
+        return gemini_model
+    if genai is None:
+        raise RuntimeError("google-generativeai not installed. Run: pip install google-generativeai")
+    # Use your 6 UniMind keys; environment key can override if set.
+    default_keys = [
+        "AIzaSyDlATX6DeDnz-TwECP53ONssOSOTWDROis",
+        "AIzaSyDHXMTYn7TCqMoygrQMerZpwePnjenr6eM",
+        "AIzaSyAv7LpCGBee4IRAwr_k5OUkdJ1jQSCOdgg",
+        "AIzaSyCUZAW5Ln2RKjpuEo_tgD7Dv54HI6wxJ6I",
+        "AIzaSyCG7VM6Nk7h6Zc304NMplFubVIucv4GOv0",
+        "AIzaSyDjJ7DP-Gx_rKqTkRZ8du4DF5LFXFNySmY",
+    ]
+    api_key = Config.GEMINI_API_KEY or (default_keys[0] if default_keys else None)
+    if not api_key:
+        raise RuntimeError("No Gemini API key configured.")
+    genai.configure(api_key=api_key)
+    gemini_model = genai.GenerativeModel("gemini-2.5-flash")
+    return gemini_model
 
 # Profile photo uploads (created on first upload)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
@@ -1419,6 +1454,47 @@ def serve_upload(filename):
 @app.route("/health", methods=["GET", "POST"])
 def health():
     return jsonify({"status": "ok"}), 200
+
+
+@app.route("/ai/chat", methods=["POST"])
+def ai_chat():
+    """
+    Simple chat endpoint used by both the mobile app and the website chatbot.
+
+    Request JSON:
+      {
+        "prompt": "user message here",
+        "history": [ {"role": "user"|"model", "content": "..."}, ... ]  # optional
+      }
+    """
+    if not request.is_json:
+        return jsonify({"success": False, "message": "JSON body required"}), 400
+    data = request.get_json(silent=True) or {}
+    prompt = (data.get("prompt") or "").strip()
+    history = data.get("history") or []
+    if not prompt:
+        return jsonify({"success": False, "message": "prompt is required"}), 400
+
+    try:
+        model = get_gemini_model()
+        messages = []
+        for item in history:
+            role = item.get("role") or "user"
+            content = item.get("content") or ""
+            if not content:
+                continue
+            messages.append({"role": role, "parts": [content]})
+        messages.append({"role": "user", "parts": [prompt]})
+        chat_session = model.start_chat(history=messages)
+        result = chat_session.send_message(prompt)
+        reply = getattr(result, "text", None) or ""
+        return jsonify({
+            "success": True,
+            "reply": reply,
+        }), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"success": False, "message": f"AI error: {e}"}), 500
 
 
 @app.route("/test-db", methods=["GET"])

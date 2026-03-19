@@ -6,7 +6,6 @@ import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Switch
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.widget.PopupMenu
@@ -60,9 +59,6 @@ class PasswordAuthenticationActivity : ComponentActivity() {
         findViewById<Button>(R.id.password_auth_update_btn).setOnClickListener {
             Toast.makeText(this, "Update Password", Toast.LENGTH_SHORT).show()
         }
-
-        findViewById<Switch>(R.id.password_auth_2fa_switch).setOnCheckedChangeListener { _, _ -> }
-        findViewById<Switch>(R.id.password_auth_biometric_switch).setOnCheckedChangeListener { _, _ -> }
     }
 
     private fun togglePasswordVisibility(edit: EditText, toggle: ImageButton, visible: Boolean) {

@@ -27,12 +27,12 @@ object GeminiApi {
 
     /** Built-in 6 keys so the app always has fallbacks even if gradle.properties is not loaded. */
     private val DEFAULT_API_KEYS = listOf(
-        "AIzaSyBESSTVZXQ3ZVIn2JOhn1OuXZFNUMvm86o",
-        "AIzaSyCHB_N-fLcTCnPPXn_SFPJEIi3Pe2uocmA",
-        "AIzaSyBL1ldguk68bx0CTw8YZVjkbPT0CYX0fMw",
-        "AIzaSyBynI4JOTsj-MiQ4ZQ1RhpqW7MZnus6XxU",
-        "AIzaSyD_C7ukCAAoiY_ekr8DbFGKEUR3ULQnSRc",
-        "AIzaSyAJPTBfzg7I_17547T0xqZ3RV_ciwDQYAQ"
+        "AIzaSyDlATX6DeDnz-TwECP53ONssOSOTWDROis",
+        "AIzaSyDHXMTYn7TCqMoygrQMerZpwePnjenr6eM",
+        "AIzaSyAv7LpCGBee4IRAwr_k5OUkdJ1jQSCOdgg",
+        "AIzaSyCUZAW5Ln2RKjpuEo_tgD7Dv54HI6wxJ6I",
+        "AIzaSyCG7VM6Nk7h6Zc304NMplFubVIucv4GOv0",
+        "AIzaSyDjJ7DP-Gx_rKqTkRZ8du4DF5LFXFNySmY"
     )
 
     /** List of API keys to try in order; on 429/quota we try the next key (up to 6).
@@ -166,13 +166,20 @@ object GeminiApi {
     /**
      * Chatbot: send user message and get AI reply. Use for AI Chat screen.
      */
-    fun sendChatMessage(userMessage: String, onResult: (String?) -> Unit) {
+    fun sendChatMessage(
+        userMessage: String,
+        extraStyleInstructions: String = "",
+        onResult: (String?) -> Unit
+    ) {
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are the in-app UniMind assistant. You must ONLY answer questions related to:
 - The UniMind app itself (features, navigation, how to use screens).
 - The four UniMind domains: Health, Productivity, Finance, Lifestyle (goals, habits, routines, motivation, and how the app can help).
 
 If the user asks anything that is clearly outside these topics (for example: general world knowledge, politics, celebrities, programming, random trivia, or anything not connected to UniMind or these four domains), you MUST reply with EXACTLY this sentence and nothing else:
 \"This question is not related to this app. Please ask questions related to UniMind and its Health, Productivity, Finance, or Lifestyle features.\"
+
+${if (style.isNotEmpty()) "The user has chosen these AI personalization preferences in the app. Follow them as much as possible:\n$style\n" else ""}
 
 Keep valid answers helpful, concise (2-4 sentences unless they ask for more), and encouraging. Reply in plain text, no markdown or bullets unless the user asks for a list.
 
@@ -190,12 +197,15 @@ Assistant:"""
         stepsToday: Int,
         stepsGoal: Int,
         last7Days: List<Int>? = null,
+        extraStyleInstructions: String = "",
         onResult: (String?) -> Unit
     ) {
         val week = if (!last7Days.isNullOrEmpty()) " Last 7 days steps: $last7Days." else ""
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are a friendly health coach for the UniMind app. Give one short, encouraging tip (1-2 sentences) for the user's step count.
 Today: $stepsToday steps. Daily goal: $stepsGoal.$week
-If they are behind goal, suggest one simple action (e.g. short walk, stairs). If they met or exceeded goal, congratulate briefly. No bullet points, no hashtags. Plain text only."""
+If they are behind goal, suggest one simple action (e.g. short walk, stairs). If they met or exceeded goal, congratulate briefly. No bullet points, no hashtags. Plain text only.
+${if (style.isNotEmpty()) "AI personalization preferences: $style" else ""}"""
         callGemini(prompt) { result ->
             onResult(result ?: "Keep moving! Every step counts.")
         }
@@ -208,6 +218,7 @@ If they are behind goal, suggest one simple action (e.g. short walk, stairs). If
         domainIndices: List<Int>,
         goalsText: String = "",
         fullName: String = "",
+        extraStyleInstructions: String = "",
         onResult: (Map<String, String>) -> Unit
     ) {
         val names = domainIndices.mapNotNull { i -> domainNames.getOrNull(i) }
@@ -217,8 +228,10 @@ If they are behind goal, suggest one simple action (e.g. short walk, stairs). If
         }
         val goals = goalsText.ifBlank { "Not specified" }
         val name = fullName.ifBlank { "User" }
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are a friendly coach for the UniMind app. The user "$name" has selected these life domains: ${names.joinToString(", ")}. Their goals: $goals.
 For each domain in the list below, give exactly one short, actionable recommendation (1-2 sentences). Be specific and practical.
+${if (style.isNotEmpty()) "Follow these personalization preferences when writing tips: $style" else ""}
 Respond in valid JSON only, no other text. Format: { "Health": "tip...", "Productivity": "tip...", "Finance": "tip...", "Lifestyle": "tip..." }
 Only include keys for: ${names.joinToString(", ")}."""
         callGemini(prompt) { raw ->
@@ -249,13 +262,16 @@ Only include keys for: ${names.joinToString(", ")}."""
         domainIndex: Int,
         summary: String,
         recentMetrics: Map<String, Any>? = null,
+        extraStyleInstructions: String = "",
         onResult: (String?) -> Unit
     ) {
         val domainName = domainNames.getOrElse(domainIndex) { "General" }
         val metrics = if (!recentMetrics.isNullOrEmpty()) " Recent metrics: $recentMetrics." else ""
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are a friendly coach for the UniMind app. Give one short, encouraging progress insight (1-2 sentences) for the $domainName domain.
 Progress summary: $summary.$metrics
-Acknowledge progress and suggest one next step if relevant. Plain text only, no bullets."""
+Acknowledge progress and suggest one next step if relevant. Plain text only, no bullets.
+${if (style.isNotEmpty()) "Personalize your tone using: $style" else ""}"""
         callGemini(prompt) { result ->
             onResult(result ?: "You're making progress. Keep it up!")
         }
@@ -268,10 +284,13 @@ Acknowledge progress and suggest one next step if relevant. Plain text only, no 
         monthlySalary: Double,
         totalSpentToday: Double,
         totalSpentThisMonth: Double,
+        extraStyleInstructions: String = "",
         onResult: (String?) -> Unit
     ) {
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are a friendly financial coach for the UniMind app. The user's monthly salary is $monthlySalary. Today they spent $totalSpentToday. So far this month they have spent $totalSpentThisMonth.
-Give 2-3 short, actionable suggestions (1 sentence each): budgeting tip, saving tip, or spending awareness. Be specific. Plain text, no bullets or numbers."""
+Give 2-3 short, actionable suggestions (1 sentence each): budgeting tip, saving tip, or spending awareness. Be specific. Plain text, no bullets or numbers.
+${if (style.isNotEmpty()) "Adjust your advice based on: $style" else ""}"""
         callGemini(prompt) { result ->
             onResult(result ?: "Track your daily expenses to stay within your budget.")
         }
@@ -284,11 +303,14 @@ Give 2-3 short, actionable suggestions (1 sentence each): budgeting tip, saving 
         totalTasks: Int,
         completedToday: Int,
         upcomingTaskTitles: List<String>,
+        extraStyleInstructions: String = "",
         onResult: (String?) -> Unit
     ) {
         val upcoming = if (upcomingTaskTitles.isEmpty()) "No upcoming tasks." else "Upcoming: ${upcomingTaskTitles.take(5).joinToString(", ")}."
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are a productivity coach for the UniMind app. User has $totalTasks tasks total, completed $completedToday today. $upcoming
-Give one short, practical tip to stay focused or prioritize better. Plain text only."""
+Give one short, practical tip to stay focused or prioritize better. Plain text only.
+${if (style.isNotEmpty()) "Follow these personalization preferences when coaching: $style" else ""}"""
         callGemini(prompt) { result ->
             onResult(result ?: "Tackle the most important task first.")
         }
@@ -300,10 +322,13 @@ Give one short, practical tip to stay focused or prioritize better. Plain text o
     fun getLifestyleSuggestions(
         sleepHours: Float,
         stressLevel: Int,
+        extraStyleInstructions: String = "",
         onResult: (String?) -> Unit
     ) {
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are a wellness coach for the UniMind app. User slept $sleepHours hours last night. Self-reported stress level (1-10): $stressLevel.
-Give one short, kind suggestion to improve sleep or reduce stress. Plain text only."""
+Give one short, kind suggestion to improve sleep or reduce stress. Plain text only.
+${if (style.isNotEmpty()) "Match your tone to these personalization preferences: $style" else ""}"""
         callGemini(prompt) { result ->
             onResult(result ?: "Aim for 7-8 hours of sleep and short breaks during the day.")
         }
@@ -317,12 +342,15 @@ Give one short, kind suggestion to improve sleep or reduce stress. Plain text on
         period: String,
         summary: String,
         metrics: Map<String, Any>? = null,
+        extraStyleInstructions: String = "",
         onResult: (String?) -> Unit
     ) {
         val m = if (metrics.isNullOrEmpty()) "" else " Metrics: $metrics."
+        val style = extraStyleInstructions.takeIf { it.isNotBlank() } ?: ""
         val prompt = """You are a friendly coach for the UniMind app. Give a short progress report (2-3 sentences) for the $domainName domain for $period.
 Summary: $summary.$m
-Acknowledge what went well and suggest one improvement for next period. Plain text only."""
+Acknowledge what went well and suggest one improvement for next period. Plain text only.
+${if (style.isNotEmpty()) "Use these personalization preferences when writing: $style" else ""}"""
         callGemini(prompt) { result ->
             onResult(result ?: "Keep tracking for better insights.")
         }

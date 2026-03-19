@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.Switch
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.widget.PopupMenu
 
@@ -34,12 +33,27 @@ class AiPersonalizationActivity : ComponentActivity() {
             }
         }
 
-        // Toggles: persist state in SharedPreferences if needed; for now they just work in UI
-        findViewById<Switch>(R.id.ai_personalization_proactive).setOnCheckedChangeListener { _, isChecked ->
-            // Optionally save: getSharedPreferences(...).edit().putBoolean("ai_proactive", isChecked).apply()
+        val proactive = findViewById<Switch>(R.id.ai_personalization_proactive)
+        val learning = findViewById<Switch>(R.id.ai_personalization_learning)
+        val explanations = findViewById<Switch>(R.id.ai_personalization_explanations)
+        val scheduling = findViewById<Switch>(R.id.ai_personalization_scheduling)
+
+        proactive.isChecked = UserPrefs.isAiProactive(this)
+        learning.isChecked = UserPrefs.isAiLearning(this)
+        explanations.isChecked = UserPrefs.isAiExplanations(this)
+        scheduling.isChecked = UserPrefs.isAiScheduling(this)
+
+        proactive.setOnCheckedChangeListener { _, isChecked ->
+            UserPrefs.setAiProactive(this, isChecked)
         }
-        findViewById<Switch>(R.id.ai_personalization_learning).setOnCheckedChangeListener { _, _ -> }
-        findViewById<Switch>(R.id.ai_personalization_explanations).setOnCheckedChangeListener { _, _ -> }
-        findViewById<Switch>(R.id.ai_personalization_scheduling).setOnCheckedChangeListener { _, _ -> }
+        learning.setOnCheckedChangeListener { _, isChecked ->
+            UserPrefs.setAiLearning(this, isChecked)
+        }
+        explanations.setOnCheckedChangeListener { _, isChecked ->
+            UserPrefs.setAiExplanations(this, isChecked)
+        }
+        scheduling.setOnCheckedChangeListener { _, isChecked ->
+            UserPrefs.setAiScheduling(this, isChecked)
+        }
     }
 }

@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
   <script src="auth.js"></script>
+  <script src="api.js"></script>
   <script>
     tailwind.config = { darkMode: "class", theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };
   </script>
@@ -43,9 +44,9 @@
       <h1 class="text-2xl md:text-3xl font-bold">Productivity</h1>
       <!-- Tasks completed today (mirrors ProductivityActivity) -->
       <div class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-6">
-        <p class="text-4xl font-bold text-white">0</p>
+        <p id="prod-completed" class="text-4xl font-bold text-white">0</p>
         <p class="text-slate-400 mt-1">Tasks completed today</p>
-        <p class="text-sm text-slate-300 mt-2">0/0 total</p>
+        <p id="prod-summary" class="text-sm text-slate-300 mt-2">0/0 total</p>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <a href="add-task.html" class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-4 flex items-center gap-3 hover:border-primary/50 transition">
@@ -54,19 +55,36 @@
         </a>
         <a href="quick-actions.html" class="rounded-2xl bg-purple-900/40 border border-purple-500/30 p-4 flex items-center gap-3 hover:border-primary/50 transition">
           <span class="material-symbols-outlined text-amber-400 text-2xl">timer</span>
-          <span class="font-semibold text-white">Focus Mode</span>
+          <span class="font-semibold text-white">Quick actions</span>
         </a>
       </div>
+      <!-- Simple web focus timer, mirrors app countdown concept (no notifications) -->
+      <div class="rounded-2xl bg-slate-900/60 border border-purple-500/40 p-5 space-y-3">
+        <p class="font-semibold text-white">Next focus block</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="prod-focus-title" class="block text-xs text-slate-400 uppercase mb-1">Task</label>
+            <input id="prod-focus-title" type="text" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-slate-100 focus:outline-none" placeholder="e.g. Deep work on assignment" />
+          </div>
+          <div>
+            <label for="prod-focus-time" class="block text-xs text-slate-400 uppercase mb-1">Start time</label>
+            <input id="prod-focus-time" type="datetime-local" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-slate-100 focus:outline-none" />
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3">
+          <button id="prod-focus-save" type="button" class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 active:scale-95">
+            Save &amp; start countdown
+          </button>
+          <p id="prod-focus-countdown" class="text-sm text-slate-300">No focus block scheduled.</p>
+        </div>
+      </div>
       <p class="font-semibold text-white">Today's Tasks</p>
-      <ul class="space-y-2">
-        <li class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-3 flex justify-between"><span class="text-white">Review project proposal</span><span class="text-slate-400 text-sm">Done</span></li>
-        <li class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-3 flex justify-between"><span class="text-white">Team meeting at 2 PM</span><span class="text-slate-400 text-sm">Tap to mark done</span></li>
-        <li class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-3 flex justify-between"><span class="text-white">Finish quarterly report</span><span class="text-slate-400 text-sm">Tap to mark done</span></li>
-        <li class="rounded-xl bg-purple-900/40 border border-purple-500/20 p-3 flex justify-between"><span class="text-white">Email client updates</span><span class="text-slate-400 text-sm">Tap to mark done</span></li>
+      <ul id="prod-task-list" class="space-y-2">
+        <!-- tasks could be listed here in future; for now we just show count in header -->
       </ul>
       <div class="rounded-xl bg-primary/20 border border-primary/30 p-4">
         <p class="text-sm font-semibold text-primary">AI Tip</p>
-        <p class="text-slate-200 text-sm mt-1">Great progress! Schedule your high-priority tasks in the morning for better focus.</p>
+        <p id="prod-ai-text" class="text-slate-200 text-sm mt-1">Add or complete tasks to see productivity suggestions similar to the mobile app.</p>
       </div>
       <div class="flex flex-wrap gap-3">
         <a href="tasks-overview.html" class="text-primary font-medium text-sm">Tasks overview</a>
@@ -76,5 +94,97 @@
       <a href="dashboard.html" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white">← Back to Dashboard</a>
     </div>
   </main>
+  <script>
+    function prodLoadState() {
+      const state = unimindGetProductivityState();
+      const completed = Number(state.completedToday) || 0;
+      const total = Number(state.totalTasks) || 0;
+      document.getElementById("prod-completed").textContent = completed;
+      document.getElementById("prod-summary").textContent = completed + "/" + total + " total";
+    }
+
+    async function prodRefreshAi() {
+      const textEl = document.getElementById("prod-ai-text");
+      const prev = textEl.textContent;
+      textEl.textContent = "Generating a tip based on your tasks…";
+      try {
+        const reply = await unimindAiProductivityInsight();
+        textEl.textContent = reply;
+      } catch (err) {
+        textEl.textContent = err.message || "Could not fetch AI suggestion. Please try again.";
+      }
+    }
+
+    const PROD_FOCUS_KEY = "unimind_productivity_focus";
+
+    function prodLoadFocus() {
+      let data = null;
+      try {
+        const raw = localStorage.getItem(PROD_FOCUS_KEY);
+        data = raw ? JSON.parse(raw) : null;
+      } catch {
+        data = null;
+      }
+      if (!data) {
+        document.getElementById("prod-focus-countdown").textContent = "No focus block scheduled.";
+        return null;
+      }
+      document.getElementById("prod-focus-title").value = data.title || "";
+      if (data.startIso) {
+        document.getElementById("prod-focus-time").value = data.startIso;
+      }
+      return data;
+    }
+
+    let prodFocusTimerId = null;
+
+    function prodUpdateCountdown() {
+      const data = prodLoadFocus();
+      const el = document.getElementById("prod-focus-countdown");
+      if (!data || !data.startIso) {
+        el.textContent = "No focus block scheduled.";
+        return;
+      }
+      const target = new Date(data.startIso).getTime();
+      const now = Date.now();
+      const diff = target - now;
+      if (isNaN(target)) {
+        el.textContent = "Set a valid time.";
+        return;
+      }
+      if (diff <= 0) {
+        el.textContent = "Focus block is due now: " + (data.title || "Your task");
+        return;
+      }
+      const totalSec = Math.floor(diff / 1000);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      el.textContent = "Starts in " + String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    }
+
+    function prodStartCountdownLoop() {
+      if (prodFocusTimerId) clearInterval(prodFocusTimerId);
+      prodUpdateCountdown();
+      prodFocusTimerId = setInterval(prodUpdateCountdown, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      prodLoadState();
+      // Automatically fetch one tip when page opens (mirrors app behaviour).
+      prodRefreshAi();
+      prodLoadFocus();
+      prodStartCountdownLoop();
+      document.getElementById("prod-focus-save").addEventListener("click", function () {
+        const title = document.getElementById("prod-focus-title").value.trim();
+        const iso = document.getElementById("prod-focus-time").value;
+        const data = { title, startIso: iso };
+        try {
+          localStorage.setItem(PROD_FOCUS_KEY, JSON.stringify(data));
+        } catch {}
+        prodStartCountdownLoop();
+      });
+    });
+  </script>
 </body>
 </html>
