@@ -1,7 +1,24 @@
-/** Resolves to same host as Android app — one MySQL DB (unimind) on api_server. */
+/**
+ * UniMind web → Flask API (same backend as the Android app for login, etc.)
+ *
+ * Website AI (/ai/chat, /ai/finance_suggestions, …) runs on the server only.
+ * Keys live on the server (GEMINI_API_KEY / GEMINI_API_KEYS): api_server/.env is tried first,
+ * then local.properties, gemini_keys.properties, gradle.properties — restart python app.py.
+ * Open the site at http://127.0.0.1:5000/web/… (not file://). Never put API keys in this file.
+ */
 function unimindApiBase() {
   if (typeof window !== "undefined" && window.UNIMIND_API_BASE) {
     return String(window.UNIMIND_API_BASE).replace(/\/+$/, "");
+  }
+  // Pages served from Flask at /web/... → same origin; use "" so fetch("/ai/...") works.
+  if (typeof window !== "undefined" && window.location) {
+    var proto = window.location.protocol || "";
+    if (proto !== "file:") {
+      var path = window.location.pathname || "";
+      if (path === "/web" || path.indexOf("/web/") === 0) {
+        return "";
+      }
+    }
   }
   return "http://127.0.0.1:5000";
 }
@@ -27,14 +44,24 @@ function unimindSetFinanceState(state) {
 }
 
 async function unimindCallApi(path, body) {
-  const res = await fetch(unimindApiBase() + path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body || {}),
-  });
+  const base = unimindApiBase();
+  let res;
+  try {
+    res = await fetch(base + path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body || {}),
+    });
+  } catch (e) {
+    throw new Error(
+      "Cannot reach API at " +
+        base +
+        ". Start the server (python app.py) and set window.UNIMIND_API_BASE if not on this PC."
+    );
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok || !data.success) {
-    throw new Error(data.message || "Request failed");
+    throw new Error(data.message || "Request failed (" + res.status + ")");
   }
   return data;
 }

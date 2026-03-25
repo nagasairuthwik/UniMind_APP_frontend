@@ -1,0 +1,7 @@
+# Optional. If blank, UniMind uses api_server/.env, local.properties, then gradle.properties.
+# For the website backend, editing api_server/.env (GEMINI_*) takes priority — restart python app.py.
+#
+# Get keys: https://aistudio.google.com/apikey
+#
+GEMINI_API_KEY=
+GEMINI_API_KEYS=

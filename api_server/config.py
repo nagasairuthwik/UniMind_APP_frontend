@@ -5,13 +5,86 @@ from pathlib import Path
 _env_path = Path(__file__).resolve().parent / ".env"
 if _env_path.exists():
     from dotenv import load_dotenv
-    load_dotenv(_env_path)
+    load_dotenv(_env_path, override=True)
 else:
     try:
         from dotenv import load_dotenv
-        load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+        load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=True)
     except Exception:
         pass
+
+
+def _parse_gemini_props_file(path: Path) -> list:
+    """Read GEMINI_API_KEYS (comma-separated) or GEMINI_API_KEY from a .properties file."""
+    if not path.is_file():
+        return []
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    props = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, _, v = line.partition("=")
+        props[k.strip()] = v.strip()
+    raw = (props.get("GEMINI_API_KEYS") or "").strip()
+    if raw:
+        return [p.strip() for p in raw.split(",") if p.strip()]
+    single = (props.get("GEMINI_API_KEY") or "").strip()
+    return [single] if single else []
+
+
+def _root_gemini_keys_file_list():
+    """Optional project root gemini_keys.properties — same source as Android when configured."""
+    root = Path(__file__).resolve().parent.parent
+    return _parse_gemini_props_file(root / "gemini_keys.properties")
+
+
+def _gradle_gemini_key_list():
+    """gradle.properties GEMINI_* (fallback if gemini_keys.properties missing)."""
+    gradle_file = Path(__file__).resolve().parent.parent / "gradle.properties"
+    return _parse_gemini_props_file(gradle_file)
+
+
+def _local_properties_gemini_list():
+    """Android local.properties — optional GEMINI_API_KEY / GEMINI_API_KEYS (same format)."""
+    lp = Path(__file__).resolve().parent.parent / "local.properties"
+    return _parse_gemini_props_file(lp)
+
+
+def _env_gemini_key_list():
+    raw = (os.environ.get("GEMINI_API_KEYS") or "").strip()
+    if raw:
+        return [k.strip() for k in raw.split(",") if k.strip()]
+    single = os.environ.get("GEMINI_API_KEY") or os.environ.get("GEMINI_AI_API_KEY") or ""
+    return [single] if single else []
+
+
+def gemini_api_key_candidates():
+    """
+    Keys for the Python Gemini client (website /ai/* routes).
+
+    Order (first wins for new/updated keys — edit api_server/.env for website quick fixes):
+      1) Environment (.env loaded at startup)
+      2) local.properties (GEMINI_* — Android Studio–friendly)
+      3) gemini_keys.properties (optional root file)
+      4) gradle.properties
+    Deduped while preserving order.
+    """
+    seen = set()
+    out = []
+    for k in (
+        _env_gemini_key_list()
+        + _local_properties_gemini_list()
+        + _root_gemini_keys_file_list()
+        + _gradle_gemini_key_list()
+    ):
+        if k not in seen:
+            seen.add(k)
+            out.append(k)
+    return out
 
 
 class Config:

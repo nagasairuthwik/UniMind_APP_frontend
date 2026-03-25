@@ -15,9 +15,9 @@ import java.util.concurrent.TimeUnit
  * Gemini AI client for UniMind – runs on the device (no backend AI).
  * Uses Gemini REST API for step insights, domain recommendations, and progress tips.
  *
- * You can use up to 6 API keys for fallback when one hits quota/rate limit:
- * - In gradle.properties set: GEMINI_API_KEYS=key1,key2,... (comma-separated, up to 6)
- * - Or set a single key: GEMINI_API_KEY=your_key
+ * You can use up to 6 API keys for fallback when one hits quota/rate limit.
+ * Primary file (app + website AI): project root gemini_keys.properties (GEMINI_API_KEY / GEMINI_API_KEYS).
+ * If that file is missing, keys come from gradle.properties — see gemini_keys.properties.example.
  * Get keys at https://aistudio.google.com/apikey
  */
 object GeminiApi {
@@ -25,18 +25,7 @@ object GeminiApi {
     private const val BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
     private const val MODEL = "gemini-2.5-flash"
 
-    /** Built-in 6 keys so the app always has fallbacks even if gradle.properties is not loaded. */
-    private val DEFAULT_API_KEYS = listOf(
-        "AIzaSyD7WHTfTUCD8QhTX4fWds-vn4fIclmtO8g",
-        "AIzaSyBOhN7Ho5M_wyv-8zJjeryX_rm74hSNx6Y",
-        "AIzaSyBRmYoTciafmYmh4KEDhT1qpwGbpnDrYf0",
-        "AIzaSyBZXkBgOKfATL6gh-O3Y_lNynkLPY5PydA",
-        "AIzaSyAtIpkWZo9WUthvoVwmyQTG4xsB_Vv92LQ",
-        "AIzaSyCg0iojTkl-8JVVRYVGvuFGSugdASkAPLE"
-    )
-
-    /** List of API keys to try in order; on 429/quota we try the next key (up to 6).
-     * Uses BuildConfig if set, else DEFAULT_API_KEYS so all 6 are always available. */
+    /** Keys from BuildConfig (project gradle.properties). No keys are embedded in source. */
     private val apiKeys: List<String>
         get() = try {
             val keysStr = BuildConfig.GEMINI_API_KEYS.takeIf { it.isNotBlank() }
@@ -50,11 +39,9 @@ object GeminiApi {
             }
             fromConfig.ifEmpty {
                 listOfNotNull(BuildConfig.GEMINI_API_KEY.takeIf { it.isNotBlank() })
-            }.ifEmpty {
-                DEFAULT_API_KEYS
             }
         } catch (e: Exception) {
-            DEFAULT_API_KEYS
+            emptyList()
         }
 
     private val gson = Gson()

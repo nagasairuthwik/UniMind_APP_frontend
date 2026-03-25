@@ -18,11 +18,14 @@ import uuid
 import random
 import smtplib
 import ssl
+import urllib.error
+import urllib.request
 from datetime import datetime, timedelta
-from flask import Flask, request, jsonify, g, send_from_directory
+from pathlib import Path
+from flask import Flask, request, jsonify, g, send_from_directory, redirect
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-from config import Config
+from config import Config, gemini_api_key_candidates
 
 try:
     import google.generativeai as genai
@@ -41,43 +44,173 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ---------- Gemini AI client (shared for app + website) ----------
+# Website pages call /ai/* on this server; they never embed keys. Keys: api_server/.env
 
-gemini_model = None
+# Same REST surface as Android GeminiApi.kt — some accounts only work on certain models.
+_GEMINI_MODEL_NAMES = (
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+)
 
-def get_gemini_model():
-    """Lazy‑init Gemini model using API key from Config."""
-    global gemini_model
-    if gemini_model is not None:
-        return gemini_model
+
+def _gemini_rest_generate_text(prompt: str) -> str:
+    """Call Generative Language API via HTTPS (same as mobile app) when SDK path fails."""
+    keys = gemini_api_key_candidates()
+    if not keys:
+        raise RuntimeError("No Gemini API key configured.")
+    payload = json.dumps(
+        {"contents": [{"parts": [{"text": prompt}]}]}
+    ).encode("utf-8")
+    last_err = None
+    for api_key in keys:
+        for model in _GEMINI_MODEL_NAMES:
+            url = (
+                "https://generativelanguage.googleapis.com/v1beta/models/"
+                f"{model}:generateContent?key={api_key}"
+            )
+            req = urllib.request.Request(
+                url,
+                data=payload,
+                method="POST",
+                headers={"Content-Type": "application/json; charset=utf-8"},
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    data = json.loads(resp.read().decode())
+                err = data.get("error")
+                if err:
+                    last_err = err.get("message", err)
+                    continue
+                c_list = data.get("candidates") or []
+                if not c_list:
+                    continue
+                parts = (c_list[0].get("content") or {}).get("parts") or []
+                if parts and parts[0].get("text"):
+                    return str(parts[0]["text"]).strip()
+            except urllib.error.HTTPError as e:
+                try:
+                    body = json.loads(e.read().decode())
+                    last_err = (body.get("error") or {}).get("message", str(e))
+                except Exception:
+                    last_err = str(e)
+                continue
+            except Exception as e:
+                last_err = e
+                continue
+    raise RuntimeError(last_err or "REST Gemini failed")
+
+
+def _with_gemini_model(func):
+    """
+    Run func(GenerativeModel) with the first working key × model combination.
+    """
     if genai is None:
         raise RuntimeError("google-generativeai not installed. Run: pip install google-generativeai")
-    # Use your 6 UniMind keys; environment key can override if set.
-    default_keys = [
-        "AIzaSyD7WHTfTUCD8QhTX4fWds-vn4fIclmtO8g",
-        "AIzaSyBOhN7Ho5M_wyv-8zJjeryX_rm74hSNx6Y",
-        "AIzaSyBRmYoTciafmYmh4KEDhT1qpwGbpnDrYf0",
-        "AIzaSyBZXkBgOKfATL6gh-O3Y_lNynkLPY5PydA",
-        "AIzaSyAtIpkWZo9WUthvoVwmyQTG4xsB_Vv92LQ",
-        "AIzaSyCg0iojTkl-8JVVRYVGvuFGSugdASkAPLE",
+    keys = gemini_api_key_candidates()
+    if not keys:
+        raise RuntimeError(
+            "No Gemini API key configured. Set GEMINI_API_KEY / GEMINI_API_KEYS in "
+            "api_server/.env and/or gradle.properties, then restart the server."
+        )
+    last_exc = None
+    for api_key in keys:
+        for model_name in _GEMINI_MODEL_NAMES:
+            try:
+                genai.configure(api_key=api_key)
+                model = genai.GenerativeModel(model_name)
+                return func(model)
+            except Exception as e:
+                last_exc = e
+                continue
+
+    if last_exc is None:
+        raise RuntimeError("All Gemini API keys failed.")
+
+    err_text = str(last_exc).lower()
+    if "api_key_invalid" in err_text or "api key expired" in err_text or "invalid api key" in err_text:
+        raise RuntimeError(
+            "Gemini API key is invalid or expired (Google rejected every key we tried). "
+            "Create a new key at https://aistudio.google.com/apikey — set GEMINI_API_KEY and/or GEMINI_API_KEYS in "
+            "api_server/.env (website uses those first), save, restart python app.py. "
+            "Open the site at http://127.0.0.1:5000/web/ai-chat.html not as a file:// path."
+        ) from last_exc
+    raise RuntimeError(
+        f"Gemini failed after trying {len(keys)} key(s). Last error: {last_exc}"
+    ) from last_exc
+
+
+def _gemini_chat_history_for_start_chat(history, current_prompt: str) -> list:
+    """
+    Build history for model.start_chat().
+
+    The website sends `history` that already includes the latest user message.
+    Gemini expects prior turns only here; the latest user text is sent via send_message().
+    Trailing user turns are stripped so history does not end with user (invalid for start_chat).
+    """
+    turns = []
+    for item in history or []:
+        content = (item.get("content") or "").strip()
+        if not content:
+            continue
+        role_raw = (item.get("role") or "user").lower()
+        if role_raw in ("assistant", "model"):
+            role = "model"
+        else:
+            role = "user"
+        turns.append({"role": role, "parts": [content]})
+    while turns and turns[-1]["role"] == "user":
+        turns.pop()
+    return turns
+
+
+def _gemini_chat_fallback_prompt(history, current_prompt: str) -> str:
+    """Single-string conversation if start_chat fails (SDK / format edge cases)."""
+    lines = [
+        "You are UniMind, a helpful, concise assistant for a wellness and productivity app.",
+        "Continue the conversation naturally.",
+        "",
     ]
-    api_key = Config.GEMINI_API_KEY or (default_keys[0] if default_keys else None)
-    if not api_key:
-        raise RuntimeError("No Gemini API key configured.")
-    genai.configure(api_key=api_key)
-    gemini_model = genai.GenerativeModel("gemini-2.5-flash")
-    return gemini_model
+    turns = []
+    for item in history or []:
+        c = (item.get("content") or "").strip()
+        if not c:
+            continue
+        r = (item.get("role") or "user").lower()
+        tag = "User" if r == "user" else "Assistant"
+        turns.append((tag, c))
+    cur = (current_prompt or "").strip()
+    if turns and turns[-1][0] == "User" and turns[-1][1] == cur:
+        turns = turns[:-1]
+    for tag, c in turns:
+        lines.append(f"{tag}: {c}")
+    lines.append(f"User: {cur}")
+    lines.append("Assistant:")
+    return "\n".join(lines)
 
 
 def gemini_generate_plain_text(prompt: str) -> str:
     """Single-shot Gemini reply for website /ai/* helpers (finance, productivity, lifestyle)."""
-    model = get_gemini_model()
-    result = model.generate_content(prompt)
-    return (getattr(result, "text", None) or "").strip()
+
+    def go(model):
+        result = model.generate_content(prompt)
+        return (getattr(result, "text", None) or "").strip()
+
+    try:
+        out = _with_gemini_model(go)
+        if out:
+            return out
+    except Exception:
+        traceback.print_exc()
+    return _gemini_rest_generate_text(prompt)
 
 # Profile photo uploads (created on first upload)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Static website (open in browser via HTTP — not file://)
+WEBSITE_DIR = (Path(__file__).resolve().parent.parent / "website").resolve()
 
 # Sample notification prompt templates used by the mobile app.
 # These are NOT shown directly to the user from the backend, but are useful
@@ -1458,9 +1591,51 @@ def serve_upload(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 
+@app.route("/web", methods=["GET"])
+def website_entry_redirect():
+    """Use HTTP URLs so the browser can call /ai/* APIs (file:// often breaks fetch)."""
+    return redirect("/web/index.html", code=302)
+
+
+@app.route("/web/<path:filename>", methods=["GET"])
+def serve_website(filename):
+    """Serve files from project /website, e.g. http://127.0.0.1:5000/web/ai-chat.html"""
+    candidate = (WEBSITE_DIR / filename).resolve()
+    try:
+        candidate.relative_to(WEBSITE_DIR)
+    except ValueError:
+        return jsonify({"success": False, "message": "Invalid path"}), 403
+    if not candidate.is_file():
+        return jsonify({"success": False, "message": "Not found"}), 404
+    return send_from_directory(str(WEBSITE_DIR), filename)
+
+
 @app.route("/health", methods=["GET", "POST"])
 def health():
     return jsonify({"status": "ok"}), 200
+
+
+@app.route("/ai/gemini-sources", methods=["GET"])
+def ai_gemini_sources():
+    """How many keys each source contributes (no secrets). Use to verify website picks up your edits."""
+    from config import (
+        gemini_api_key_candidates,
+        _env_gemini_key_list,
+        _gradle_gemini_key_list,
+        _local_properties_gemini_list,
+        _root_gemini_keys_file_list,
+    )
+    return jsonify({
+        "success": True,
+        "sources": {
+            "api_server_dot_env": len(_env_gemini_key_list()),
+            "local_properties": len(_local_properties_gemini_list()),
+            "gemini_keys_properties": len(_root_gemini_keys_file_list()),
+            "gradle_properties": len(_gradle_gemini_key_list()),
+        },
+        "merged_unique_key_count": len(gemini_api_key_candidates()),
+        "order": "env → local.properties → gemini_keys.properties → gradle.properties",
+    }), 200
 
 
 @app.route("/ai/chat", methods=["POST"])
@@ -1483,18 +1658,27 @@ def ai_chat():
         return jsonify({"success": False, "message": "prompt is required"}), 400
 
     try:
-        model = get_gemini_model()
-        messages = []
-        for item in history:
-            role = item.get("role") or "user"
-            content = item.get("content") or ""
-            if not content:
-                continue
-            messages.append({"role": role, "parts": [content]})
-        messages.append({"role": "user", "parts": [prompt]})
-        chat_session = model.start_chat(history=messages)
-        result = chat_session.send_message(prompt)
-        reply = getattr(result, "text", None) or ""
+        def go(model):
+            hist = _gemini_chat_history_for_start_chat(history, prompt)
+            try:
+                chat_session = model.start_chat(history=hist)
+                result = chat_session.send_message(prompt)
+                reply = getattr(result, "text", None) or ""
+            except Exception:
+                traceback.print_exc()
+                fb = _gemini_chat_fallback_prompt(history, prompt)
+                result = model.generate_content(fb)
+                reply = getattr(result, "text", None) or ""
+            return (reply or "").strip()
+
+        try:
+            reply = _with_gemini_model(go)
+        except Exception:
+            traceback.print_exc()
+            fb = _gemini_chat_fallback_prompt(history, prompt)
+            reply = _gemini_rest_generate_text(fb)
+        if not reply:
+            reply = "I'm here to help. Could you say that another way?"
         return jsonify({
             "success": True,
             "reply": reply,
@@ -1611,5 +1795,5 @@ def test_db():
 init_db()
 
 if __name__ == "__main__":
-    print(f"[UniMind] Server: http://0.0.0.0:5000")
+    print(f"[UniMind] API + website: http://127.0.0.1:5000  |  AI chat: http://127.0.0.1:5000/web/ai-chat.html")
     app.run(host="0.0.0.0", port=5000, debug=True)

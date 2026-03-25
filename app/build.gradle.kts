@@ -20,11 +20,31 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Optional: set in gradle.properties:
-        // - GEMINI_API_KEYS=KEY1,KEY2,... (comma-separated, up to 6 keys for fallback)
-        // - or GEMINI_API_KEY=single_key
-        val geminiKey = project.findProperty("GEMINI_API_KEY") as String? ?: ""
-        val geminiKeys = project.findProperty("GEMINI_API_KEYS") as String? ?: ""
+        // Gemini: local.properties → gemini_keys.properties → gradle.properties (matches Flask load order).
+        val geminiLocal: Pair<String, String> = run {
+            val lp = rootProject.file("local.properties")
+            if (!lp.exists()) return@run Pair("", "")
+            val p = Properties()
+            lp.inputStream().use { p.load(it) }
+            Pair(
+                p.getProperty("GEMINI_API_KEY", "").trim(),
+                p.getProperty("GEMINI_API_KEYS", "").trim()
+            )
+        }
+        val geminiFromFile: Pair<String, String> = run {
+            val f = rootProject.file("gemini_keys.properties")
+            if (!f.exists()) return@run Pair("", "")
+            val p = Properties()
+            f.inputStream().use { p.load(it) }
+            Pair(
+                p.getProperty("GEMINI_API_KEY", "").trim(),
+                p.getProperty("GEMINI_API_KEYS", "").trim()
+            )
+        }
+        val geminiKey =
+            geminiLocal.first.ifEmpty { geminiFromFile.first.ifEmpty { project.findProperty("GEMINI_API_KEY") as String? ?: "" } }
+        val geminiKeys =
+            geminiLocal.second.ifEmpty { geminiFromFile.second.ifEmpty { project.findProperty("GEMINI_API_KEYS") as String? ?: "" } }
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
         buildConfigField("String", "GEMINI_API_KEYS", "\"$geminiKeys\"")
 

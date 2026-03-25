@@ -1,16 +1,24 @@
 // Simple client-side auth gate for UniMind web.
 // Marks a session as "logged in" after signup or signin and protects main pages.
 
-// Default API URL (same PC as browser). Override in any HTML before auth.js:
-//   <script>window.UNIMIND_API_BASE = "http://192.168.x.x:5000";</script>
+// API base for login/signup/fetch. Override in any HTML before auth.js if needed.
+// When pages are served at http://127.0.0.1:5000/web/... (python app.py), use ""
+// so requests go to the same origin (avoids CORS and file:// issues).
 (function () {
   if (typeof window === "undefined") return;
   var b = window.UNIMIND_API_BASE;
-  if (!b || String(b).trim() === "") {
-    window.UNIMIND_API_BASE = "http://127.0.0.1:5000";
-  } else {
+  if (b != null && String(b).trim() !== "") {
     window.UNIMIND_API_BASE = String(b).replace(/\/+$/, "");
+    return;
   }
+  if (window.location && window.location.protocol !== "file:") {
+    var path = window.location.pathname || "";
+    if (path === "/web" || path.indexOf("/web/") === 0) {
+      window.UNIMIND_API_BASE = "";
+      return;
+    }
+  }
+  window.UNIMIND_API_BASE = "http://127.0.0.1:5000";
 })();
 
 const UNIMIND_AUTH_KEY = "unimind_is_logged_in";
