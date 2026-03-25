@@ -69,7 +69,7 @@ class AllSetActivity : AppCompatActivity() {
         personalityName.text = getString(personalityTitleIds[personalityIndex])
 
         findViewById<Button>(R.id.all_set_continue).setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java).apply {
+            val intent = Intent(this, SubscriptionActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
             startActivity(intent)

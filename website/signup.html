@@ -10,6 +10,7 @@
   <script>tailwind.config = { theme: { extend: { colors: { primary: "#7c3aed" }, fontFamily: { display: ["Inter", "sans-serif"] } } } };</script>
   <style>body { font-family: 'Inter', sans-serif; } .glass { background: rgba(124, 58, 237, 0.25); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.3); } .app-bg { background: linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%); }</style>
   <script src="auth.js"></script>
+  <script src="web-access.js"></script>
 </head>
 <body class="app-bg min-h-screen text-slate-50 antialiased">
   <nav class="fixed top-0 w-full z-50 px-6 py-4">
@@ -57,7 +58,7 @@
         return;
       }
       try {
-        const res = await fetch("http://localhost:5000/signup", {
+        const res = await fetch(window.UNIMIND_API_BASE + "/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ full_name: fullName, email, password })
@@ -72,7 +73,10 @@
         window.location.href = "profile-setup.html";
       } catch (e) {
         console.error(e);
-        alert("Unable to reach UniMind server. Please make sure the API is running.");
+        var hint = window.location.protocol === "file:"
+          ? "\n\nYou opened this page as a FILE (C:\\... in the address bar).\nUse serve.bat → http://127.0.0.1:8765/signup.html\n(See website\\README_LOCAL.md)"
+          : "\n\nCheck: api_server is running (python app.py), XAMPP MySQL is on, and open http://127.0.0.1:5000/health in the browser.";
+        alert("Unable to reach UniMind server." + hint);
       }
     }
   </script>

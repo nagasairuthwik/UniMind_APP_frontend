@@ -1,4 +1,10 @@
-const UNIMIND_API_BASE = "http://localhost:5000";
+/** Resolves to same host as Android app — one MySQL DB (unimind) on api_server. */
+function unimindApiBase() {
+  if (typeof window !== "undefined" && window.UNIMIND_API_BASE) {
+    return String(window.UNIMIND_API_BASE).replace(/\/+$/, "");
+  }
+  return "http://127.0.0.1:5000";
+}
 const UNIMIND_FINANCE_KEY = "unimind_finance_state";
 const UNIMIND_PRODUCTIVITY_KEY = "unimind_productivity_state";
 const UNIMIND_LIFESTYLE_KEY = "unimind_lifestyle_state";
@@ -21,7 +27,7 @@ function unimindSetFinanceState(state) {
 }
 
 async function unimindCallApi(path, body) {
-  const res = await fetch(UNIMIND_API_BASE + path, {
+  const res = await fetch(unimindApiBase() + path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body || {}),

@@ -27,12 +27,12 @@ object GeminiApi {
 
     /** Built-in 6 keys so the app always has fallbacks even if gradle.properties is not loaded. */
     private val DEFAULT_API_KEYS = listOf(
-        "AIzaSyDlATX6DeDnz-TwECP53ONssOSOTWDROis",
-        "AIzaSyDHXMTYn7TCqMoygrQMerZpwePnjenr6eM",
-        "AIzaSyAv7LpCGBee4IRAwr_k5OUkdJ1jQSCOdgg",
-        "AIzaSyCUZAW5Ln2RKjpuEo_tgD7Dv54HI6wxJ6I",
-        "AIzaSyCG7VM6Nk7h6Zc304NMplFubVIucv4GOv0",
-        "AIzaSyDjJ7DP-Gx_rKqTkRZ8du4DF5LFXFNySmY"
+        "AIzaSyD7WHTfTUCD8QhTX4fWds-vn4fIclmtO8g",
+        "AIzaSyBOhN7Ho5M_wyv-8zJjeryX_rm74hSNx6Y",
+        "AIzaSyBRmYoTciafmYmh4KEDhT1qpwGbpnDrYf0",
+        "AIzaSyBZXkBgOKfATL6gh-O3Y_lNynkLPY5PydA",
+        "AIzaSyAtIpkWZo9WUthvoVwmyQTG4xsB_Vv92LQ",
+        "AIzaSyCg0iojTkl-8JVVRYVGvuFGSugdASkAPLE"
     )
 
     /** List of API keys to try in order; on 429/quota we try the next key (up to 6).

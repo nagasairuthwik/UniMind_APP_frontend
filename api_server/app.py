@@ -53,12 +53,12 @@ def get_gemini_model():
         raise RuntimeError("google-generativeai not installed. Run: pip install google-generativeai")
     # Use your 6 UniMind keys; environment key can override if set.
     default_keys = [
-        "AIzaSyDlATX6DeDnz-TwECP53ONssOSOTWDROis",
-        "AIzaSyDHXMTYn7TCqMoygrQMerZpwePnjenr6eM",
-        "AIzaSyAv7LpCGBee4IRAwr_k5OUkdJ1jQSCOdgg",
-        "AIzaSyCUZAW5Ln2RKjpuEo_tgD7Dv54HI6wxJ6I",
-        "AIzaSyCG7VM6Nk7h6Zc304NMplFubVIucv4GOv0",
-        "AIzaSyDjJ7DP-Gx_rKqTkRZ8du4DF5LFXFNySmY",
+        "AIzaSyD7WHTfTUCD8QhTX4fWds-vn4fIclmtO8g",
+        "AIzaSyBOhN7Ho5M_wyv-8zJjeryX_rm74hSNx6Y",
+        "AIzaSyBRmYoTciafmYmh4KEDhT1qpwGbpnDrYf0",
+        "AIzaSyBZXkBgOKfATL6gh-O3Y_lNynkLPY5PydA",
+        "AIzaSyAtIpkWZo9WUthvoVwmyQTG4xsB_Vv92LQ",
+        "AIzaSyCg0iojTkl-8JVVRYVGvuFGSugdASkAPLE",
     ]
     api_key = Config.GEMINI_API_KEY or (default_keys[0] if default_keys else None)
     if not api_key:
@@ -66,6 +66,13 @@ def get_gemini_model():
     genai.configure(api_key=api_key)
     gemini_model = genai.GenerativeModel("gemini-2.5-flash")
     return gemini_model
+
+
+def gemini_generate_plain_text(prompt: str) -> str:
+    """Single-shot Gemini reply for website /ai/* helpers (finance, productivity, lifestyle)."""
+    model = get_gemini_model()
+    result = model.generate_content(prompt)
+    return (getattr(result, "text", None) or "").strip()
 
 # Profile photo uploads (created on first upload)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
@@ -1495,6 +1502,87 @@ def ai_chat():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"success": False, "message": f"AI error: {e}"}), 500
+
+
+@app.route("/ai/finance_suggestions", methods=["POST"])
+def ai_finance_suggestions():
+    """Website finance.html — matches website/api.js unimindAiFinanceInsight."""
+    if not request.is_json:
+        return jsonify({"success": False, "message": "JSON body required"}), 400
+    data = request.get_json(silent=True) or {}
+    try:
+        monthly = float(data.get("monthly_salary") or 0)
+        today = float(data.get("total_spent_today") or 0)
+        month = float(data.get("total_spent_month") or 0)
+    except (TypeError, ValueError):
+        monthly, today, month = 0.0, 0.0, 0.0
+    prompt = f"""You are a friendly financial coach for the UniMind app. The user's monthly salary is {monthly}. Today they spent {today}. So far this month they have spent {month}.
+Give 2-3 short, actionable suggestions (1 sentence each): budgeting tip, saving tip, or spending awareness. Be specific. Plain text, no bullets or numbers."""
+    try:
+        reply = gemini_generate_plain_text(prompt)
+        if not reply:
+            reply = "Track your daily expenses to stay within your budget."
+        return jsonify({"success": True, "reply": reply}), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({
+            "success": True,
+            "reply": f"Tip: Set a weekly spending limit and review expenses each evening. (AI unavailable: {e})",
+        }), 200
+
+
+@app.route("/ai/productivity_suggestions", methods=["POST"])
+def ai_productivity_suggestions():
+    """Website productivity.html — matches website/api.js unimindAiProductivityInsight."""
+    if not request.is_json:
+        return jsonify({"success": False, "message": "JSON body required"}), 400
+    data = request.get_json(silent=True) or {}
+    total = int(data.get("total_tasks") or 0)
+    completed = int(data.get("completed_today") or 0)
+    upcoming = data.get("upcoming_titles") or []
+    if not isinstance(upcoming, list):
+        upcoming = []
+    up_text = "No upcoming tasks." if not upcoming else "Upcoming: " + ", ".join(str(x) for x in upcoming[:5]) + "."
+    prompt = f"""You are a productivity coach for the UniMind app. User has {total} tasks total, completed {completed} today. {up_text}
+Give one short, practical tip to stay focused or prioritize better. Plain text only."""
+    try:
+        reply = gemini_generate_plain_text(prompt)
+        if not reply:
+            reply = "Tackle the most important task first."
+        return jsonify({"success": True, "reply": reply}), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({
+            "success": True,
+            "reply": f"Try time-blocking your top task for 25 minutes. (AI unavailable: {e})",
+        }), 200
+
+
+@app.route("/ai/lifestyle_suggestions", methods=["POST"])
+def ai_lifestyle_suggestions():
+    """Website lifestyle.html — matches website/api.js unimindAiLifestyleInsight."""
+    if not request.is_json:
+        return jsonify({"success": False, "message": "JSON body required"}), 400
+    data = request.get_json(silent=True) or {}
+    try:
+        sleep = float(data.get("sleep_hours") or 0)
+        stress = int(data.get("stress_level") or 5)
+    except (TypeError, ValueError):
+        sleep, stress = 0.0, 5
+    stress = max(1, min(10, stress))
+    prompt = f"""You are a wellness coach for the UniMind app. User slept {sleep} hours last night. Self-reported stress level (1-10): {stress}.
+Give one short, kind suggestion to improve sleep or reduce stress. Plain text only."""
+    try:
+        reply = gemini_generate_plain_text(prompt)
+        if not reply:
+            reply = "Aim for 7-8 hours of sleep and short breaks during the day."
+        return jsonify({"success": True, "reply": reply}), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({
+            "success": True,
+            "reply": f"Try a 10-minute wind-down before bed and limit screens. (AI unavailable: {e})",
+        }), 200
 
 
 @app.route("/test-db", methods=["GET"])

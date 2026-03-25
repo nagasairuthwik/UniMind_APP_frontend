@@ -48,6 +48,10 @@
             android:exported="false"
             android:theme="@style/Theme.UniMind" />
         <activity
+            android:name=".SubscriptionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.UniMind" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false"
             android:theme="@style/Theme.UniMind" />

@@ -162,7 +162,7 @@ class SignupActivity : ComponentActivity() {
 
     /**
      * After successful signup, automatically log in the user and start onboarding.
-     * Flow: Signup → (auto login) → ProfileSetupActivity → ... → AllSetActivity → MainActivity.
+     * Flow: Signup → (auto login) → ProfileSetupActivity → ... → AllSetActivity → SubscriptionActivity → MainActivity.
      */
     private fun loginAndStartOnboarding(fullName: String, email: String, password: String) {
         ApiClient.service.login(LoginRequest(email, password))
