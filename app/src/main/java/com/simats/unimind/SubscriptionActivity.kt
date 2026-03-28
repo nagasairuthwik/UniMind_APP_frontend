@@ -25,6 +25,7 @@ class SubscriptionActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
     companion object {
         private const val TAG = "SubscriptionActivity"
+        // Play Console product id (keep unless you create a new subscription product for UniMind)
         private const val SUBSCRIPTION_SKU = "univault_premium_subscription"
         private const val TEST_SUBSCRIPTION_SKU = "android.test.purchased"
     }

@@ -51,6 +51,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 emailEdit.requestFocus()
                 return@setOnClickListener
             }
+            if (!UniMindEmailPolicy.isAllowed(email)) {
+                emailEdit.error = getString(R.string.signup_email_domain_error)
+                emailEdit.requestFocus()
+                return@setOnClickListener
+            }
 
             // Call backend to send OTP email before moving to OTP screen
             ApiClient.service.sendForgotOtp(ForgotPasswordOtpRequest(email))

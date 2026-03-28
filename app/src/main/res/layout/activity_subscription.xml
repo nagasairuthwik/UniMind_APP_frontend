@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:letterSpacing="0.02"
-            android:text="UniVault Premium"
+            android:text="UniMind Premium"
             android:textColor="@android:color/white"
             android:textSize="36sp"
             android:textStyle="bold"

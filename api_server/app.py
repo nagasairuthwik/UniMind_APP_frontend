@@ -539,6 +539,21 @@ def close_db(e=None):
 
 # ---------- Signup: write to MySQL ----------
 
+def _is_allowed_unimind_email(email: str) -> bool:
+    """Allow @gmail.com or Saveetha addresses with '.sse' in the local part (e.g. name.sse@saveetha.com)."""
+    e = (email or "").strip().lower()
+    if e.count("@") != 1:
+        return False
+    local, _, domain = e.partition("@")
+    if not local or not domain:
+        return False
+    if domain == "gmail.com":
+        return True
+    if domain == "saveetha.com" and ".sse" in local:
+        return True
+    return False
+
+
 def store_signup_in_db(full_name, email, password):
     """Insert one user into MySQL. Returns (id, created_at)."""
     conn = get_mysql_connection()
@@ -573,6 +588,11 @@ def signup():
         return jsonify({"success": False, "message": "Full name is required"}), 400
     if not email:
         return jsonify({"success": False, "message": "Email is required"}), 400
+    if not _is_allowed_unimind_email(email):
+        return jsonify({
+            "success": False,
+            "message": "Use a @gmail.com address or a Saveetha email like name.sse@saveetha.com",
+        }), 400
     if not password:
         return jsonify({"success": False, "message": "Password is required"}), 400
     # Strong password policy: min 8, uppercase, lowercase, number, special char.
@@ -617,6 +637,11 @@ def login():
 
     if not email or not password:
         return jsonify({"success": False, "message": "Email and password required"}), 400
+    if not _is_allowed_unimind_email(email):
+        return jsonify({
+            "success": False,
+            "message": "Use a @gmail.com address or a Saveetha email like name.sse@saveetha.com",
+        }), 400
 
     try:
         db = get_db()
@@ -699,6 +724,11 @@ def forgot_send_otp():
     email = (data.get("email") or "").strip().lower()
     if not email:
         return jsonify({"success": False, "message": "Email is required"}), 400
+    if not _is_allowed_unimind_email(email):
+        return jsonify({
+            "success": False,
+            "message": "Use a @gmail.com address or a Saveetha email like name.sse@saveetha.com",
+        }), 400
 
     db = get_db()
     cursor = db.cursor()
@@ -943,6 +973,22 @@ def _profile_row_to_json(row):
         "dob": row.get("dob"),
         "phone": row.get("phone"),
     }
+    uc = row.get("user_created_at")
+    if uc:
+        if hasattr(uc, "strftime"):
+            out["member_since"] = uc.strftime("%b %Y")
+        else:
+            s = str(uc)
+            try:
+                parsed = datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                try:
+                    parsed = datetime.strptime(s[:10], "%Y-%m-%d")
+                except ValueError:
+                    parsed = None
+            out["member_since"] = parsed.strftime("%b %Y") if parsed else s
+    else:
+        out["member_since"] = None
     updated = row.get("updated_at")
     out["updated_at"] = updated.strftime("%Y-%m-%d %H:%M:%S") if updated and hasattr(updated, "strftime") else str(updated)
     return out
@@ -1020,6 +1066,11 @@ def profile_save():
 
     profile = _parse_profile_data(data)
     email = (data.get("email") or "").strip().lower() or None
+    if email and not _is_allowed_unimind_email(email):
+        return jsonify({
+            "success": False,
+            "message": "Use a @gmail.com address or a Saveetha email like name.sse@saveetha.com",
+        }), 400
     # Retry once on MySQL lock timeout / deadlock to avoid "network error" in the app
     max_attempts = 2
 
@@ -1104,7 +1155,8 @@ def profile_save():
                         p.goals,
                         p.dob,
                         p.phone,
-                        p.updated_at
+                        p.updated_at,
+                        u.created_at AS user_created_at
                     FROM users u
                     LEFT JOIN profiles p ON p.user_id = u.id
                     WHERE u.id = %s
@@ -1546,7 +1598,8 @@ def profile_get(user_id):
             p.goals,
             p.dob,
             p.phone,
-            p.updated_at
+            p.updated_at,
+            u.created_at AS user_created_at
         FROM users u
         LEFT JOIN profiles p ON p.user_id = u.id
         WHERE u.id = %s

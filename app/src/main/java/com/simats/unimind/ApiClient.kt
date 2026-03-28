@@ -69,7 +69,9 @@ data class ProfileData(
     val goals: String?,
     val dob: String?,
     val phone: String?,
-    val updated_at: String?
+    val updated_at: String?,
+    /** Formatted on server from account created_at, e.g. "Jan 2024" */
+    val member_since: String? = null
 )
 
 data class ProfileResponse(

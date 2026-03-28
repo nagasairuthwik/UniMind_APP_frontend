@@ -189,6 +189,7 @@
                                 android:textColor="@color/signup_subtitle"
                                 android:textSize="12sp" />
                             <TextView
+                                android:id="@+id/profile_member_since_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/profile_member_since_value"

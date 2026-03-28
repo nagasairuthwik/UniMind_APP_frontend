@@ -711,7 +711,7 @@
     <string name="profile_full_name_value">sai</string>
     <string name="profile_goal_1">Improve productivity</string>
     <string name="profile_member_since">Member Since</string>
-    <string name="profile_member_since_value">Jan 2026</string>
+    <string name="profile_member_since_value">—</string>
     <string name="profile_my_goals_title">My Goals</string>
     <string name="profile_my_profile_title">My Profile</string>
     <string name="profile_setup_add_photo_desc">Add profile photo</string>
@@ -842,6 +842,7 @@
     <string name="signup_confirm_password">Confirm Password</string>
     <string name="signup_confirm_password_hint">Re-enter your password</string>
     <string name="signup_password_mismatch_error">Passwords do not match</string>
+    <string name="signup_email_domain_error">Use a @gmail.com address or a Saveetha email like name.sse@saveetha.com</string>
     <string name="signup_sign_in">Sign In</string>
     <string name="signup_subtitle">Enter your details to create your account</string>
     <string name="signup_title">Create Account</string>

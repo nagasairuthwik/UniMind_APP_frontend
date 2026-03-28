@@ -85,6 +85,11 @@ class SignInActivity : AppCompatActivity() {
                 emailEdit.requestFocus()
                 return@setOnClickListener
             }
+            if (!UniMindEmailPolicy.isAllowed(email)) {
+                emailEdit.error = getString(R.string.signup_email_domain_error)
+                emailEdit.requestFocus()
+                return@setOnClickListener
+            }
             if (password.isEmpty()) {
                 passwordEdit.error = getString(R.string.signin_password_hint)
                 passwordEdit.requestFocus()

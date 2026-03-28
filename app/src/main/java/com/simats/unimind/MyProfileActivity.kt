@@ -117,6 +117,10 @@ class MyProfileActivity : AppCompatActivity() {
                             activeGoalsTextView.text = parts.size.toString()
                         }
                     }
+
+                    profile.member_since?.takeIf { it.isNotBlank() }?.let { since ->
+                        findViewById<TextView>(R.id.profile_member_since_value).text = since
+                    }
                 }
 
                 override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {

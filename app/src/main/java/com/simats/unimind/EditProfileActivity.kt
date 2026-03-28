@@ -78,6 +78,11 @@ class EditProfileActivity : ComponentActivity() {
 
             val fullName = fullNameEdit.text.toString().trim()
             val email = emailEdit.text.toString().trim()
+            if (email.isNotEmpty() && !UniMindEmailPolicy.isAllowed(email)) {
+                emailEdit.error = getString(R.string.signup_email_domain_error)
+                emailEdit.requestFocus()
+                return@setOnClickListener
+            }
             val ageText = ageEdit.text.toString().trim()
             val dobText = dobEdit.text.toString().trim()
             val phoneText = phoneEdit.text.toString().trim()
